@@ -1,389 +1,167 @@
-function [XDOT] = Model(X, U, t_sim)
+function [XDOT] = Model(X, U)
+% Modelo Dinámico del Ekranoplano AirFish 8
+% ESCALA: 1:21.5 (Modelo Físico para Tablero Estudiantil)
+% Longitud aprox: 80 cm | Envergadura: 70 cm | Masa: 300 g
+
 %-----------STATE AND CONTROL VECTORS-------------
-x1 = X(1); %u
-x2 = X(2); %v
-x3 = X(3); %w
-x4 = X(4); %p
-x5 = X(5); %q
-x6 = X(6); %r
-x7 = X(7); %phi
-x8 = X(8); %theta
-x9 = X(9); %psi
-x10 = X(10); % x_NED
-x11 = X(11); % y_NED
-x12 = X(12); % z_NED
+x1=X(1); x2=X(2); x3=X(3); x4=X(4); x5=X(5); x6=X(6);
+x7=X(7); x8=X(8); x9=X(9); x10=X(10); x11=X(11); x12=X(12);
+u1=U(1); u2=U(2); u3=U(3); u4=U(4); u5=U(5);
 
-u1 = U(1); %d_A (Aileron)
-u2 = U(2); %d_E (Elevator)
-u3 = U(3); %d_R (Rudder)
-u4 = U(4); %d_th1 (throttle 1)
-u5 = U(5); %d_th2 (throttle 2)
+%-----------SYSTEM PARAMETERS (ESCALA 1:21.5 - REALISTA 1.2 KG)------
+m = 1.200;          % Masa real ajustada (Kg)
+bw = 0.6977;        % Span Wing (m) - 69.8 cm
+bh = 0.3808;        % Span HTP (m)
+cbar = 0.0930;      % Mean Aerodynamic Chord (m)
+lt = 0.5600;        % Distance AC tail to body (m)
+Sw = 0.0649;        % Wing planform area (m^2)
+Sh = 0.02164;       % Tail planform area (m^2)
+ARw = 7.5; ARh = 6.7; TRw = 0.4; TRh = 0.5;
 
-%-----------SYSTEM PARAMETERS------------------------------
-m = 112; % Aircraft mass (Kg) - ASEGURAR QUE COINCIDA CON GAZEBO SDF/URDF
-vc = 28; % cruise speed
-bw = 5.02; % Span (Wing)
-bh = 2.74; % Span (HTP)
-cbar = 0.646; % Mean Aerodynamic Chord (m)
-lt = 24.8;  % Distance of AC of tail and body (m)
-Sw = 3.334;    % Wing planform area (m^2)
-Sh = 1.128;    % Tail planform area (m^2)
-ARw = 7.5; % Apect Ratio (Wing) 
-ARh = 6.7; % Apect Ratio (HTP) 
-TRw = 0.4; % Taper Ratio (Wing) 
-TRh = 0.5; % Taper Ratio (HTP) 
+Xcg = 0; Ycg = 0; Zcg = 0;
+Xac = 0.0135; Yac = 0; Zac = -0.0083;
+Xapt1 = -0.0721; Yapt1 =  0.0834; Zapt1 = 0.0396;
+Xapt2 = -0.0721; Yapt2 = -0.0834; Zapt2 = 0.0396;
 
-Xcg = 0;  % x position of CG in Fm (m)
-Ycg = 0;  % y position of CG in Fm (m)
-Zcg = 0;  % z position of CG in Fm (m)
+rho = 1.225; g = 9.81; e0w = 0.9; e0h = 0.9;
+alpha_0w = -3.75*pi/180; alpha_0h = -4.25*pi/180;
+iw = 1.0 * pi/180; ih = 0.5 * pi/180;
+zw = 0.0505; zh = 0.3475; CD_0 = 0.0306; 
 
-Xac = 0.097;  % x position of Aerodynamic Center in Fm (m)
-Yac = 0;      % y position of Aerodynamic Center in Fm (m)
-Zac = -0.06;  % z position of Aerodynamic Center in Fm (m)
-
-%Engine constants
-Xapt1 = -0.519; % x position of engine 1 force in Fm (m)
-Yapt1 = 0.6;    % y position of engine 1 force in Fm (m)
-Zapt1 = 0.285;  % z position of engine 1 force in Fm (m)
-
-Xapt2 = -0.519;  % x position of engine 2 force in Fm (m)
-Yapt2 = -0.6;    % y position of engine 2 force in Fm (m)
-Zapt2 = 0.285;   % z position of engine 2 force in Fm (m)
-
-%Other constants
-rho = 1.225;
-g = 9.81;
-e0w = 0.9; % Oswald's efficiency Factor (Wing)
-e0h = 0.9; % Oswald's efficiency Factor (HTP)
-alpha_0w = -3.75*pi/180; % Zero Lift Angle of Attack (Wing)
-alpha_0h = -4.25*pi/180; % Zero Lift Angle of Attack (HTP)
-iw = 1.0 * pi/180; % Angle of incidence (Wing)
-ih = 0.5 * pi/180; % Angle of Incidence (HTP)
-eps = 0; % Downwash Angle
-zw = 0.363; % Wing Offset
-zh = 2.50;  % HTP Offset (CORREGIDO: Altura realista de cola en T para AirFish 8)
-CD_0 = 0.0306; % Zero Lift Drag Coefficient
 
 %-----------CONTROL LIMITS SATURATION------------------------------
-
-% aileron
-u1min = -20*pi/180;
-u1max =  20*pi/180;
-% elevator
-u2min = -20*pi/180;
-u2max =  20*pi/180;
-% rudder
-u3min = -15*pi/180;
-u3max =  15*pi/180;
-
-% engines (0 a 1 normalizado)
-u4min =  0;
-u4max =  1.0;
-u5min =  0;
-u5max =  1.0;
-
-if(u1>u1max)
-    u1=u1max;
-elseif(u1<u1min)
-    u1=u1min;
-end
-
-if(u2>u2max)
-    u2=u2max;
-elseif(u2<u2min)
-    u2=u2min;
-end
-
-if(u3>u3max)
-    u3=u3max;
-elseif(u3<u3min)
-    u3=u3min;
-end
-
-if(u4>u4max)
-    u4=u4max;
-elseif(u4<u4min)
-    u4=u4min;
-end
-
-if(u5>u5max)
-    u5=u5max;
-elseif(u5<u5min)
-    u5=u5min;
-end
+u1 = max(min(u1, 20*pi/180), -20*pi/180); % Aileron
+u2 = max(min(u2, 20*pi/180), -20*pi/180); % Elevator
+u3 = max(min(u3, 15*pi/180), -15*pi/180); % Rudder
+u4 = max(min(u4, 1.0), 0.0);              % Throttle 1 [0,1]
+u5 = max(min(u5, 1.0), 0.0);              % Throttle 2 [0,1]
 
 %-------------INTERMEDIATE VARIABLES-----------------------------
-
-%% When Va = Vg + Vw
-u = x1; 
-v = x2; 
-w = x3;
-phi = x7; 
-theta = x8; 
-psi = x9;
-c_phi = cos(phi);
-s_phi = sin(phi);
-c_theta = cos(theta);
-s_theta = sin(theta);
-c_psi = cos(psi);
-s_psi = sin(psi);
-
-% rotation matrix
-Rb_v = [c_theta*c_psi c_theta*s_psi -s_theta;
-        s_phi*s_theta*c_psi-c_phi*s_psi s_phi*s_theta*s_psi+c_phi*c_psi s_phi*c_theta;
-        c_phi*s_theta*c_psi+s_phi*s_psi c_phi*s_theta*s_psi-s_phi*c_psi c_phi*c_theta];
-
-Vb_g = [u;v;w];
-% steady-state component of wind
-w_ns = 0;
-w_es = 0;
-w_ds = 0;
-% gust component of wind
-u_wg = 0;
-v_wg = 0;
-w_wg = 0;
-Vb_w = Rb_v*[w_ns;w_es;w_ds]+[u_wg;v_wg;w_wg];
-
-Va_b = [Vb_g(1)-Vb_w(1);Vb_g(2)-Vb_w(2);Vb_g(3)-Vb_w(3)];
-
-u_r = Va_b(1);
-v_r = Va_b(2);
-w_r = Va_b(3);
-
-% Va = sqrt(u_r^2+v_r^2+w_r^2);
-% alpha = atan2(w_r,u_r);
-% beta = asin(v_r/Va);
+u_r = x1; v_r = x2; w_r = x3; % Sin viento en este script
 Va = sqrt(u_r^2 + v_r^2 + w_r^2);
 
-% Proteger ángulos a velocidades ultra bajas (ej. menor a 0.5 m/s)
 if Va < 0.5
-    alpha = 0;
-    beta = 0;
+    alpha = 0; beta = 0;
 else
     alpha = atan2(w_r, u_r);
     beta = asin(v_r / Va);
 end
+
 h = -x12;
-hw = max(0.2, h - zw); % Límite de seguridad para IGE
-hh = max(0.2, h + zh); % Límite de seguridad para IGE
-% A_wave  = 0.20;
-% T_wave  = 6.5;
-% lambda  = 50.0;
-% k_wave  = 2*pi / lambda;
-% omega_w = 2*pi / T_wave;
-% eta     = A_wave * cos(k_wave * x10 - omega_w * t_sim);
-% 
-% h  = -x12 - eta;
-% hw = max(0.2, h - zw);
-% hh = max(0.2, h + zh);
+hw = max(0.01, h - zw); % Protección división por cero
+hh = max(0.01, h + zh); 
 
+Q = 0.5*rho*Va^2;
+wbe_b = [x4; x5; x6];
+V_b = [x1; x2; x3];
 
-Q = 0.5*rho*Va^2;     %dynamic pressure
-
-wbe_b = [x4;x5;x6];
-V_b = [x1;x2;x3];
-
-%--------------Aerodynamic Force Coefficients---------------------
-
-% Lift
+%--------------Aerodynamics (Sincronizado con WIG form)----------
+% Sustentación con efecto suelo
 mu_Lw = 1 + (1 - 2.25 * (TRw^0.00273 - 0.997)*((ARw^0.717)+13.6))*(288 * abs(hw/bw)^0.787 * exp(-9.14*(abs(hw/bw)^0.327)))/(ARw^0.882);
 mu_Lh = 1 + (1 - 2.25 * (TRh^0.00273 - 0.997)*((ARh^0.717)+13.6))*(288 * abs(hh/bh)^0.787 * exp(-9.14*(abs(hh/bh)^0.327)))/(ARh^0.882);
 
-% Derivada del downwash (Aproximación lineal para alas rectas)
+% Downwash dinámico a la cola
 deps_dalpha = 0.35; 
+eps = deps_dalpha * (alpha - alpha_0w) + deps_dalpha * (lt/max(Va,0.1)) * x5;
 
-% El downwash dinámico incluye el retraso de fase (lt/Va * q)
-eps = deps_dalpha * (alpha - alpha_0w) + deps_dalpha * (lt/Va) * x5;
+CL_w_OGE = 2*pi*(ARw/(ARw+2))*(alpha - alpha_0w + iw);
+CL_h_OGE = 2*pi*(ARh/(ARh+2))*(alpha - alpha_0h + ih - eps); % Con downwash
 
-CL_w_OGE = 2*pi*(ARw/(ARw+2))*(alpha-alpha_0w+iw);
+CL_w_IGE = CL_w_OGE * mu_Lw;
+CL_h_IGE = CL_h_OGE * mu_Lh;
+Ltot = Q * (CL_w_IGE*Sw + CL_h_IGE*Sh);
 
-% Restamos el downwash dinámico (eps) al ángulo de ataque de la cola
-CL_h_OGE = 2*pi*(ARh/(ARh+2))*(alpha-alpha_0h+ih-eps);
-
-CL_w_IGE = CL_w_OGE*mu_Lw;
-CL_h_IGE = CL_h_OGE*mu_Lh; % CORREGIDO: Removido C_L_e para usar puramente torques en el control de pitch
-
-Lh = 0.5*rho*Va^2*CL_h_IGE*Sh;
-Lw = 0.5*rho*Va^2*CL_w_IGE*Sw;
-Ltot = Lw + Lh;
-
-% Drag
+% Arrastre inducido WIG
 mu_Dw = 1 - (1 - 0.157*max(0, (TRw^0.757 - 0.373))*max(0,(ARw^0.417 - 1.27)))*exp(-4.74*max(0,abs(hw/bw)^0.814))-abs(hw/bw)^2*exp(-3.88*max(0,abs(hw/bw)^0.758));
 mu_Dh = 1 - (1 - 0.157*max(0, (TRh^0.757 - 0.373))*max(0,(ARh^0.417 - 1.27)))*exp(-4.74*max(0,abs(hh/bh)^0.814))-abs(hh/bh)^2*exp(-3.88*max(0,abs(hh/bh)^0.758));
 
-C_D_e = -0.0000108*u2^2+0.000715*u2;
-
 CD_iw_IGE = CL_w_IGE^2*mu_Dw/(pi*e0w*ARw);
 CD_ih_IGE = CL_h_IGE^2*mu_Dh/(pi*e0h*ARh);
+C_D_e = -0.0000108*u2^2+0.000715*u2;
 
-Dtot = 0.5*rho*Va^2*(CD_0*Sw + CD_iw_IGE*Sw + CD_ih_IGE*Sh + C_D_e*Sh);
-
-% Side forces
-CQ = -0.019*beta*180/pi; % steady-state
+Dtot = Q * (CD_0*Sw + CD_iw_IGE*Sw + CD_ih_IGE*Sh + C_D_e*Sh);
+CQ = -0.019*beta*180/pi; 
 LD_ratio = Ltot/Dtot;
 
-%------------------------Dimensional Aero Forces--------------------
-
-% Actual dimensional forces in F_s (Stability axis)
-FA_s = [-Dtot;
-         CQ*Q*Sw;
-        -Ltot];
-
-% Rotate forces to F_b (body axis)
-C_bs = [cos(alpha)  0  -sin(alpha);
-        0           1   0;
-        sin(alpha)  0   cos(alpha)];
-
-% Sequential Rotations
+FA_s = [-Dtot; CQ*Q*Sw; -Ltot];
+C_bs = [cos(alpha) 0 -sin(alpha); 0 1 0; sin(alpha) 0 cos(alpha)];
 FA_b = C_bs*FA_s;
 
-%------------------ Cálculo de Torques Aerodinámicos ------------------
-% Parámetros de estabilidad longitudinal (usando Radianes para la dinámica pura)
-Cm_alpha = -1.14; % Equivalente aproximado a -0.02 * 180/pi
-Cm_q = -5.0;      % Amortiguación del cabeceo 
-Cm_de = -3.0;     % Autoridad del elevador 
+%------------------ Aerodynamic Torques (Unificado) ------------------
+Cm_alpha = -1.14; Cm_q = -5.0; Cm_de = -3.0; Cm_h = 0.05;
+Delta_Cm_IGE = -Cm_h * exp(-4.0 * abs(hw/bw));
 
-% Factor de Momento por Efecto Suelo (Pitch-down moment debido al AC shift)
-Cm_h = 0.05;      % Constante empírica del desplazamiento del AC
-Delta_Cm_IGE = -Cm_h * exp(-4.0 * abs(hw/bw)); % Momento inducido por el suelo
+Cl_da = -0.5; Cl_p = -2.0; 
+Cn_dr = -0.3; Cn_r = -1.5;
 
-Cl = -0.0005*beta*180/pi; % Eje de alabeo (Roll)
+Cl = -0.0286*beta + Cl_p*(x4*bw/(2*max(Va,0.1))) + Cl_da*u1;
+Cm = Cm_alpha*alpha + Delta_Cm_IGE + Cm_q*(x5*cbar/(2*max(Va,0.1))) + Cm_de*u2; 
+Cn = -0.1146*beta + Cn_r*(x6*bw/(2*max(Va,0.1))) + Cn_dr*u3;
 
-% Nuevo Cm: Momento por alfa + Momento por IGE + Momento de velocidad de cabeceo (q) + Elevador
-Cm = Cm_alpha*alpha + Delta_Cm_IGE + Cm_q*(x5*cbar/(2*Va)) + Cm_de*u2; 
+MAcg_b = [Cl; Cm; Cn] .* [bw*Q*Sw; cbar*Q*Sw; bw*Q*Sw];
 
-Cn = -0.002*beta*180/pi; % Eje de guiñada (Yaw)
+%------------------------- Engine Model (Escalado) -------------------
+km = 25.0;        % Velocidad máxima de pitch de la hélice [m/s]
+Cp = 0.57;        
+D = 0.0883;       % Diámetro hélice (8.83 cm)
+Sp = pi*(D^2/4);    
 
-CMac_b = [Cl;Cm;Cn];% steady-state
-%-------------------------Aero moment about CG--------------------------
-MAcg_b = CMac_b.*[bw*Q*Sw;cbar*Q*Sw;bw*Q*Sw];
+Vd1 = Va + u4*(km-Va); Tp1 = 0.5*rho*Sp*Cp*Vd1*(Vd1-Va);
+Vd2 = Va + u5*(km-Va); Tp2 = 0.5*rho*Sp*Cp*Vd2*(Vd2-Va);
 
-%-------------------------Engine Force & Moment-------------------------
-%propeller thrust - Fitzpatrick model for ACP 25x12.5E
-km = 39.51;% motor constant [m/s] torque/sqrt(power) 
-Cp = 0.57;% efficientcy factor
-D = 0.80; % diameter [m]
-Sp = pi*(D^2/4); % disc area
-
-d_t1 = u4; % CORREGIDO: range [0,1] puro, sin dividir por Tp
-Vd1 = Va + d_t1*(km-Va);
-Tp1 = 0.5*rho*Sp*Cp*Vd1*(Vd1-Va);
-
-d_t2 = u5; % CORREGIDO: range [0,1] puro, sin dividir por Tp
-Vd2 = Va + d_t2*(km-Va);
-Tp2 = 0.5*rho*Sp*Cp*Vd2*(Vd2-Va);
-
-FE1_b = [Tp1*cos(-5*pi/180);
-        0;
-        sin(5*pi/180)];
-FE2_b = [Tp2*cos(-5*pi/180);
-        0;
-        sin(5*pi/180)];
+FE1_b = [Tp1*cos(-5*pi/180); 0; Tp1*sin(5*pi/180)];
+FE2_b = [Tp2*cos(-5*pi/180); 0; Tp2*sin(5*pi/180)];
 FE_b = FE1_b + FE2_b;
 
-%Now engine moment due to offset of thrust from CG
-mew1 = [Xcg-Xapt1;
-        Yapt1-Ycg;
-        Zcg-Zapt1];
-
-mew2 = [Xcg-Xapt2;
-        Yapt2-Ycg;
-        Zcg-Zapt2];
-
-MEcg1_b = cross(mew1,FE1_b);
-MEcg2_b = cross(mew2,FE2_b);
-
+MEcg1_b = cross([Xcg-Xapt1; Yapt1-Ycg; Zcg-Zapt1], FE1_b);
+MEcg2_b = cross([Xcg-Xapt2; Yapt2-Ycg; Zcg-Zapt2], FE2_b);
 MEcg_b = MEcg1_b + MEcg2_b;
 
-%----------------------------Hydrodynamic Effect (Water)----------------
-h_water = 0; % Nivel del mar en Z (h = -x12)
-draft = h_water - h; % Calado (cuánto está sumergido el casco)
-
-% Inicializar fuerzas hidrodinámicas en el marco inercial (NED)
-F_hydro_NED = [0; 0; 0]; 
-
+%------------------------- Hydrodynamics (Opcional, escalada) ---------
+draft = 0 - h; 
+F_hydro_b = [0;0;0];
 if draft > 0
-    % 1. Fuerza de Flotabilidad (Empuje de Arquímedes simplificado)
-    % Asumimos un coeficiente de rigidez del casco K_buoy y amortiguación D_buoy
-    rho_water = 1025; % Densidad del agua de mar (kg/m^3)
-    K_buoy = m * g / 0.3; % Empuja el peso total si se sumerge 0.3 metros
-    D_buoy = 500; % Amortiguación vertical para que no "rebote" eternamente
+    K_buoy = m * g / 0.02; % Pesa todo a los 2cm sumergido
+    D_buoy = 15;           % Amortiguación re-escalada
+    F_buoy_z = -(K_buoy * draft - D_buoy * x3);
     
-    F_buoy_z = -(K_buoy * draft - D_buoy * x3); % Negativo porque Z_NED apunta hacia abajo
+    Cd_water = 0.8; A_wetted = 0.2 * draft;
+    Drag_water = 0.5 * 1025 * u_r^2 * Cd_water * A_wetted;
     
-    % 2. Arrastre Hidrodinámico (Resistencia del agua al avanzar)
-    % Frena drásticamente el vehículo mientras toca el agua
-    Cd_water = 0.8; 
-    A_wetted = 2.5 * draft; % Área mojada aproximada proporcional a la profundidad
-    Drag_water = 0.5 * rho_water * u_r^2 * Cd_water * A_wetted;
-    
-    F_hydro_NED = [-Drag_water; 0; F_buoy_z];
+    Rb_v = [cos(x8)*cos(x9) cos(x8)*sin(x9) -sin(x8);
+            sin(x7)*sin(x8)*cos(x9)-cos(x7)*sin(x9) sin(x7)*sin(x8)*sin(x9)+cos(x7)*cos(x9) sin(x7)*cos(x8);
+            cos(x7)*sin(x8)*cos(x9)+sin(x7)*sin(x9) cos(x7)*sin(x8)*sin(x9)-sin(x7)*cos(x9) cos(x7)*cos(x8)];
+    F_hydro_b = Rb_v' * [-Drag_water; 0; F_buoy_z];
 end
 
-% Rotar la fuerza hidrodinámica del marco NED al marco Body (F_b)
-R_n_to_b = Rb_v'; % Inversa de la matriz de rotación de Euler
-F_hydro_b = R_n_to_b * F_hydro_NED;
-
-
-%----------------------------Gravity Effect-----------------------------
-%Calculate gravitational forces in body frame. This causes no moment about cg
-g_b = [-g*sin(x8);g*cos(x8)*sin(x7);g*cos(x8)*cos(x7)];
+%----------------------------Dynamics----------------------------------
+g_b = [-g*sin(x8); g*cos(x8)*sin(x7); g*cos(x8)*cos(x7)];
 Fg_b = m*g_b;
 
-%----------------------------State Derivatives------------------------
-% Fuerzas traslacionales
-% F_b = Fg_b + FE_b + FA_b;
-F_b = Fg_b + FE_b + FA_b + F_hydro_b; % + la fuerza del agua
+F_b = Fg_b + FE_b + FA_b + F_hydro_b; 
 x1to3dot = (1/m)*F_b - cross(wbe_b,V_b);
 
-% Dinámica Rotacional (Ecuaciones de Euler con producto de inercia Ixz)
-Ixx = 39.71;
-Iyy = 85.51;
-Izz = 114.39;
-Ixz = 8.97;
-
+Ixx = 0.008217; Iyy = 0.017695; Izz = 0.023669; Ixz = 0.001856;
 Gamma = Ixx*Izz - Ixz^2; 
 
-p = wbe_b(1);
-q = wbe_b(2);
-r = wbe_b(3);
-
+p = x4; q = x5; r = x6;
 Mcg_b = MAcg_b + MEcg_b;
-L = Mcg_b(1);
-M = Mcg_b(2);
-N = Mcg_b(3);
+L = Mcg_b(1); M = Mcg_b(2); N = Mcg_b(3);
 
 p_dot = (Izz*L + Ixz*N - (Ixz*(Iyy - Ixx - Izz)*p + (Ixz^2 + Izz*(Izz - Iyy))*r)*q) / Gamma;
 q_dot = (M - (Ixx - Izz)*p*r - Ixz*(p^2 - r^2)) / Iyy;
 r_dot = (Ixz*L + Ixx*N + (Ixz*(Iyy - Ixx - Izz)*r + (Ixz^2 + Ixx*(Ixx - Iyy))*p)*q) / Gamma;
 
 x4to6dot = [p_dot; q_dot; r_dot];
-
-H_phi = [1 sin(x7)*tan(x8) cos(x7)*tan(x8);
-         0 cos(x7) -sin(x7);
-         0 sin(x7)/cos(x8) cos(x7)/cos(x8)];
-
+H_phi = [1 sin(x7)*tan(x8) cos(x7)*tan(x8); 0 cos(x7) -sin(x7); 0 sin(x7)/cos(x8) cos(x7)/cos(x8)];
 x7to9dot = H_phi*wbe_b;
-x10to12dot = rot_body_to_ned(X(1:9));
-XDOT = [x1to3dot;
-    x4to6dot;
-    x7to9dot;
-    x10to12dot;
-    LD_ratio;
-    F_b;
-    Mcg_b;
-    CQ;
-    Cl;
-    Cm;
-    Cn;
-    alpha;
-    beta;
-    CL_w_OGE;
-    CL_h_OGE;
-    CL_w_IGE;
-    CL_h_IGE;
-    CD_iw_IGE;
-    CD_ih_IGE;
-    Fg_b;
-    FE_b; 
-    FA_b];
+
+% Euler a NED
+c_phi = cos(x7); s_phi = sin(x7); c_the = cos(x8); s_the = sin(x8); c_psi = cos(x9); s_psi = sin(x9);
+R_ned = [c_the*c_psi, s_phi*s_the*c_psi - c_phi*s_psi, c_phi*s_the*c_psi + s_phi*s_psi;
+         c_the*s_psi, s_phi*s_the*s_psi + c_phi*c_psi, c_phi*s_the*s_psi - s_phi*c_psi;
+        -s_the,       s_phi*c_the,                     c_phi*c_the];
+x10to12dot = R_ned * [x1; x2; x3];
+
+XDOT = [x1to3dot; x4to6dot; x7to9dot; x10to12dot; LD_ratio; F_b; Mcg_b; CQ; Cl; Cm; Cn; alpha; beta; CL_w_OGE; CL_h_OGE; CL_w_IGE; CL_h_IGE; CD_iw_IGE; CD_ih_IGE; Fg_b; FE_b; FA_b];
+end

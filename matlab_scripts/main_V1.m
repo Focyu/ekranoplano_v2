@@ -2,74 +2,67 @@ clear all
 close all
 clc
 %% Initialization
-Cp = 0.248;% motor efficientcy factor
+Cp = 0.57;% motor efficientcy factor
 Tp = 0.125e-03; % motor PWM switching frequency
-max_thrust_force_per_motor =  Tp;
+max_thrust_force_per_motor =  1.33;
 
 % Test 1
 tsim = 100;
 step = 0.01;
 x_nom = zeros(12,1);
-% 1. Velocidad inicial de crucero (basada en vc del Model.m)
-x_nom(1) = 28;     % 'u' = 28 m/s (Velocidad de sustentación adecuada)
-x_nom(3) = 0;      % 'w' = 0 (Sin velocidad vertical inicial)
+% 1. Velocidad inicial de crucero para sostener 1.2 kg
+x_nom(1) = 20.2;   % 'u' = 20.2 m/s (~73 km/h)
+x_nom(3) = 0;      % 'w' = 0 
 
-% 2. Ángulo de ataque de equilibrio (Pitch trim inicial)
-x_nom(8) = 1.0 * (pi/180);  % Theta (Pitch) para generar Lift
+% 2. Ángulo de ataque de equilibrio
+x_nom(8) = 2.0 * (pi/180);  % Theta (Pitch)
 
 % 3. Posición inicial
-x_nom(10) = 0;     % x_NED
-x_nom(11) = 0;     % y_NED
-x_nom(12) = -1.0;  % altura inicial (invertida)
+x_nom(10) = 0;     
+x_nom(11) = 0;     
+x_nom(12) = -1.05; % altura inicial z_NED (5 cm sobre el agua en IGE)
 
 u_nom = zeros(5,1);
-u_nom(2) = -1.5 * pi/180; % Ligero elevador hacia arriba para compensar el Pitch-down del IGE
-u_nom(4:5) = 0.6;      % Acelerador al 60% inicial (No al máximo)
+u_nom(2) = -6.0 * pi/180; % Compensación de elevador
+u_nom(4:5) = 0.75;        % Acelerador al 75% inicial (motores empujan más)
 
 x0 = x_nom;
-% file_name = 'test_1.csv';
-% [XDOT] = Model(x_nom,u_nom) % debug
-%% PARAMETROS DE CONTROL PID (Lazo Cerrado)
 
-% 1. Lazo de Velocidad (Throttle / Motores) 
-% Su único objetivo es vencer el drag y mantener la presión dinámica.
-u_sp = 28.0; % Setpoint: Velocidad de crucero deseada en m/s
-% Los motores tienen inercia, usamos PI dominante.
-Kp_u = 0.05;    
-Ki_u = 0.01;  
+%% PARAMETROS DE CONTROL PID (Para modelo de 1.2 kg)
+
+% 1. Lazo de Velocidad
+u_sp = 20.2;    % Setpoint: Velocidad de crucero en m/s
+Kp_u = 0.08;    % Aumentado un poco por la mayor masa inercial
+Ki_u = 0.015;  
 Kd_u = 0.005;   
 
-% 2. Lazo de Altura (Controla el Setpoint de Cabeceo) 
-% En lugar de mover el motor, dicta qué ángulo de nariz se necesita a
-% travez del aleron superior de la cola
-h_sp = 1.0; % Setpoint de altura sobre el agua
-% Este PID calculará un theta_sp (ángulo deseado). 
-Kp_h = 1.0;  
-Ki_h = 0.01;
-Kd_h = 0.5;
+% 2. Lazo de Altura
+h_sp = 1.0;    % Setpoint de altura (5 cm)
+Kp_h = 2.50;    % Mismo Kp_h agresivo para errores milimétricos
+Ki_h = 0.5;
+Kd_h = 3.5;
 
-% Límite de seguridad para el setpoint de Pitch 
-theta_max =  8.0 * (pi/180); % Máximo cabeceo permitido hacia arriba
-theta_min = -2.0 * (pi/180); % Máximo cabeceo permitido hacia abajo
+% Límite de seguridad
+theta_max =  5.0 * (pi/180); 
+theta_min = -1.0 * (pi/180); 
 
-% 3. Lazo Interno de Elevador (Control de Cabeceo / Pitch)
-% Sigue al theta_sp dictado por el lazo de altura.
-% Ganancias iniciales (negativas por convención de deflexión):
-Kp_pitch = -1.0;   
-Ki_pitch = -0.50;  
-Kd_pitch = -1.0;   
+% 3. Lazo Interno de Elevador (Pitch)
+Kp_pitch = -0.3;   
+Ki_pitch = -0.05;  
+Kd_pitch = -0.25;   
 
-% 4. Lazo de Timón (Control de Dirección / Yaw)
-psi_sp = 0 * (pi/180); % Setpoint
-Kp_yaw = -3.0;   
-Ki_yaw = -0.05;  
-Kd_yaw = -1.0;   
+% 4. Lazo de Timón (Yaw)
+psi_sp = 0 * (pi/180); 
+Kp_yaw = -0.43;   
+Ki_yaw = -0.007;  
+Kd_yaw = -0.145;   
 
-% 5. Lazo de Alerones (Estabilización de Alabeo / Roll)
-phi_sp = 0.0; % Alas horizontales
-Kp_roll = -5.0;   
-Ki_roll = -0.10;  
-Kd_roll = -1.50;   
+% 5. Lazo de Alerones (Roll)
+phi_sp = 0.0; 
+Kp_roll = -0.72;   
+Ki_roll = -0.015;  
+Kd_roll = -0.21;   
+
 
 %% Simulation
 sim = sim('pid_control_V1.slx');

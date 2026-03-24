@@ -6,9 +6,9 @@
  *
  * Code generation for model "pid_control_V1".
  *
- * Model version              : 12.99
+ * Model version              : 12.100
  * Simulink Coder version : 25.2 (R2025b) 28-Jul-2025
- * C++ source code generated on : Mon Mar 23 21:58:41 2026
+ * C++ source code generated on : Tue Mar 24 11:22:03 2026
  *
  * Target selection: ert.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -24,6 +24,14 @@
 #include "rtw_solver.h"
 #include "slros2_initialize.h"
 #include "pid_control_V1_types.h"
+
+extern "C"
+{
+
+#include "rt_nonfinite.h"
+
+}
+
 #include <string.h>
 
 extern "C"
@@ -37,13 +45,6 @@ extern "C"
 {
 
 #include "rtGetNaN.h"
-
-}
-
-extern "C"
-{
-
-#include "rt_nonfinite.h"
 
 }
 
@@ -208,7 +209,7 @@ struct B_pid_control_V1_T {
   real_T Saturation;                   /* '<S108>/Saturation' */
   real_T FilterCoefficient_c;          /* '<S52>/Filter Coefficient' */
   real_T Saturation_k;                 /* '<S56>/Saturation' */
-  real_T Saturation_i;                 /* '<Root>/Saturation' */
+  real_T RateLimiter;                  /* '<Root>/Rate Limiter' */
   real_T FilterCoefficient_m;          /* '<S156>/Filter Coefficient' */
   real_T Saturation_f;                 /* '<S160>/Saturation' */
   real_T Switch2;                      /* '<Root>/Switch2' */
@@ -248,11 +249,11 @@ struct B_pid_control_V1_T {
   real_T sigma_w[2];                   /* '<S298>/sigma_w' */
   real_T u2;
   real_T Va;
+  real_T q_aero;
   real_T Q;
   real_T Ltot;
   real_T CQ;
   real_T Cl;
-  real_T Cn;
   real_T Vd1;
   real_T Tp1;
   real_T Tp2;
@@ -319,6 +320,8 @@ struct DW_pid_control_V1_T {
   ros_slros2_internal_block_Sub_T obj_m;/* '<S10>/SourceBlock' */
   real_T UnitDelay3_DSTATE;            /* '<Root>/Unit Delay3' */
   real_T UnitDelay2_DSTATE;            /* '<Root>/Unit Delay2' */
+  real_T PrevY;                        /* '<Root>/Rate Limiter' */
+  real_T LastMajorTime;                /* '<Root>/Rate Limiter' */
   real_T Memory_PreviousInput[3];      /* '<S12>/Memory' */
   real_T Memory1_PreviousInput[3];     /* '<S12>/Memory1' */
   real_T NextOutput;                   /* '<S279>/White Noise' */
@@ -475,6 +478,7 @@ struct DW_pid_control_V1_T {
   /* '<S292>/if Height < Max low altitude  elseif Height > Min isotropic altitude ' */
   int8_T ifHeightMaxlowaltitudeelseifH_k;
   /* '<S293>/if Height < Max low altitude  elseif Height > Min isotropic altitude ' */
+  boolean_T PrevLimited;               /* '<Root>/Rate Limiter' */
   boolean_T Memory_PreviousInput_o;    /* '<S39>/Memory' */
   boolean_T Memory_PreviousInput_a;    /* '<S249>/Memory' */
   boolean_T objisempty;                /* '<S285>/SourceBlock' */
@@ -766,7 +770,6 @@ extern volatile boolean_T runModel;
  * These blocks were eliminated from the model due to optimizations:
  *
  * Block '<Root>/Display' : Unused code path elimination
- * Block '<S106>/Proportional Gain' : Eliminated nontunable gain of 1
  * Block '<S145>/Kb' : Eliminated nontunable gain of 1
  * Block '<S280>/Cast' : Eliminate redundant data type conversion
  * Block '<S280>/Cast To Double' : Eliminate redundant data type conversion
