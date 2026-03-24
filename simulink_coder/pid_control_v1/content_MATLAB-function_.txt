@@ -99,7 +99,7 @@ MEcg_b = MEcg1_b + MEcg2_b;
 
 g_b = [-g*sin(x8); g*cos(x8)*sin(x7); g*cos(x8)*cos(x7)];
 Fg_b = m*g_b;
-F_b = Fg_b + FE_b + FA_b; % Sin hidrodinámica aquí para no interferir con el plugin Gazebo Water
+F_b = Fg_b + FE_b + FA_b; 
 x1to3dot = (1/m)*F_b - cross(wbe_b,V_b);
 Mcg_b = MAcg_b + MEcg_b;
 

@@ -7,7 +7,7 @@ Tp = 0.125e-03; % motor PWM switching frequency
 max_thrust_force_per_motor =  1.33;
 
 % Test 1
-tsim = 100;
+tsim = 10;
 step = 0.01;
 x_nom = zeros(12,1);
 % 1. Velocidad inicial de crucero para sostener 1.2 kg
@@ -44,7 +44,7 @@ Kd_h = 3.5;
 
 % Límite de seguridad
 theta_max =  5.0 * (pi/180); 
-theta_min = -1.0 * (pi/180); 
+theta_min = -3.0 * (pi/180); 
 
 % 3. Lazo Interno de Elevador (Pitch)
 Kp_pitch = -0.3;   
@@ -62,6 +62,7 @@ phi_sp = 0.0;
 Kp_roll = -0.72;   
 Ki_roll = -0.015;  
 Kd_roll = -0.21;   
+
 
 
 %% Simulation

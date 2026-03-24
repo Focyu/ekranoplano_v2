@@ -6,9 +6,9 @@
  *
  * Code generation for model "pid_control_V1".
  *
- * Model version              : 12.100
+ * Model version              : 12.106
  * Simulink Coder version : 25.2 (R2025b) 28-Jul-2025
- * C++ source code generated on : Tue Mar 24 11:22:03 2026
+ * C++ source code generated on : Tue Mar 24 15:50:29 2026
  *
  * Target selection: ert.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -21,10 +21,19 @@
 #define pid_control_V1_private_h_
 #include "rtwtypes.h"
 #include "multiword_types.h"
+#include "zero_crossing_types.h"
 #include "pid_control_V1_types.h"
 #include "pid_control_V1.h"
 
 /* Private macros used by the generated code to access rtModel */
+#ifndef rtmSetFirstInitCond
+#define rtmSetFirstInitCond(rtm, val)  ((rtm)->Timing.firstInitCondFlag = (val))
+#endif
+
+#ifndef rtmIsFirstInitCond
+#define rtmIsFirstInitCond(rtm)        ((rtm)->Timing.firstInitCondFlag)
+#endif
+
 #ifndef rtmIsMajorTimeStep
 #define rtmIsMajorTimeStep(rtm)        (((rtm)->Timing.simTimeStep) == MAJOR_TIME_STEP)
 #endif
