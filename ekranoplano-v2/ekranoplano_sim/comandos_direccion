@@ -1,0 +1,35 @@
+source /opt/ros/humble/setup.bash 
+
+# Sube a 1.5 metros
+ros2 topic pub /setpoint/altura std_msgs/msg/Float64 "{data: 1.5}" -1
+
+# Inclina la nariz ligeramente hacia arriba (~2 grados)
+ros2 topic pub /setpoint/pitch std_msgs/msg/Float64 "{data: 0.0349}" -1
+
+# Inicia un giro a la derecha de 20 grados
+ros2 topic pub /setpoint/yaw std_msgs/msg/Float64 "{data: 0.349}" -1
+
+# Endereza la nave
+ros2 topic pub /setpoint/yaw std_msgs/msg/Float64 "{data: 0.0}" -1
+
+
+#####GRABAR PARA GRAFICAR ###########
+ros2 bag record -o vuelo_ekranoplano_2 /setpoint/yaw /gazebo/model_states
+
+
+
+#####################  TECLADO ##########
+#comando leer valores teclado para timon_virtual.py
+
+cd /home/facyu/Documentos/ekranoplano_sim
+source /opt/ros/humble/setup.bash
+./timon_virtual-v2.py
+
+
+
+#####################  CONTROL XBOX ONE ##########
+#comando leer valores control para timon_joystick.py
+
+ros2 run joy joy_node
+
+
