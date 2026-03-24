@@ -1,0 +1,145 @@
+%% CONTENIDO DEL BLOQUE MATLAB FUNCTION LOCALIZADO EN EL BLOQUE SUBSYSTEM 12 SALIDAS"
+
+function [XDOT, Va_out] = Model(X, U, U_wind, W_wind)
+%#codegen
+%#codegen
+coder.varsize('XDOT', [40, 1], [0, 0]);
+coder.varsize('Va_out', [1, 1], [0, 0]);
+%-----------STATE AND CONTROL VECTORS-------------
+x1=X(1); x2=X(2); x3=X(3); x4=X(4); x5=X(5); x6=X(6);
+x7=X(7); x8=X(8); x9=X(9); x10=X(10); x11=X(11); x12=X(12);
+u1=U(1); u2=U(2); u3=U(3); u4=U(4); u5=U(5);
+%-----------SYSTEM PARAMETERS------------------------------
+m = 112; % Ajustado al original para poder volar (DEBE COINCIDIR CON GAZEBO)
+bw = 5.02; bh = 2.74; cbar = 0.646; 
+Sw = 3.334; Sh = 1.128; 
+ARw = 7.5; ARh = 6.7; TRw = 0.4; TRh = 0.5;
+Xcg = 0; Ycg = 0; Zcg = 0;
+Xac = 0.097; Yac = 0; Zac = -0.06;
+Xapt1 = -0.519; Yapt1 = 0.6; Zapt1 = 0.285;
+Xapt2 = -0.519; Yapt2 = -0.6; Zapt2 = 0.285;
+rho = 1.225; g = 9.81;
+e0w = 0.9; e0h = 0.9;
+alpha_0w = -3.75*pi/180; alpha_0h = -4.25*pi/180;
+iw = 1.0*pi/180; % Incidencia moderada para no dispararse
+ih = 0.5*pi/180; 
+eps = 0; zw = 0.363; 
+zh = 2.50; % CORREGIDO: Altura realista de cola en T para AirFish 8
+CD_0 = 0.0306;
+% Saturación
+u1 = max(min(u1, 15*pi/180), -20*pi/180);
+u2 = max(min(u2, 20*pi/180), -20*pi/180);
+u3 = max(min(u3, 15*pi/180), -15*pi/180);
+u4 = max(min(u4, 1.0), 0.0); % CORREGIDO: Normalizado 0 a 1
+u5 = max(min(u5, 1.0), 0.0); % CORREGIDO: Normalizado 0 a 1
+% VARIABLES INTERMEDIAS
+phi=x7; theta=x8; psi=x9;
+% Inyección de turbulencia Dryden
+u_wg = U_wind(1);
+v_wg = U_wind(2);
+w_wg = U_wind(3);
+p_wg = W_wind(1);
+q_wg = W_wind(2);
+r_wg = W_wind(3);
+% Velocidad Relativa al Viento (Airspeed real)
+u_r = x1 + u_wg;
+v_r = x2 + v_wg;
+w_r = x3 + w_wg;
+Va = sqrt(u_r^2 + v_r^2 + w_r^2);
+if Va == 0, Va = 0.001; end 
+Va_out = Va; % Salida para el bloque Dryden
+% Alfa y Beta son afectados por las ráfagas lineales
+alpha = atan2(w_r, u_r);
+beta  = asin(v_r / Va);
+% Tasas de rotación aerodinámicas afectadas por ráfagas angulares
+p_aero = x4 + p_wg;
+q_aero = x5 + q_wg;
+r_aero = x6 + r_wg;
+%========
+h = -x12;
+hw = max(0.001, h-zw); 
+hh = max(0.001, h+zh); 
+Q = 0.5*rho*Va^2;
+wbe_b = [x4;x5;x6];
+V_b = [x1;x2;x3];
+% Aerodinámica
+mu_Lw = 1 + (1 - 2.25*(TRw^0.00273 - 0.997)*((ARw^0.717)+13.6))*(288*abs(hw/bw)^0.787*exp(-9.14*(abs(hw/bw)^0.327)))/(ARw^0.882);
+mu_Lh = 1 + (1 - 2.25*(TRh^0.00273 - 0.997)*((ARh^0.717)+13.6))*(288*abs(hh/bh)^0.787*exp(-9.14*(abs(hh/bh)^0.327)))/(ARh^0.882);
+CL_w_OGE = 2*pi*(ARw/(ARw+2))*(alpha-alpha_0w+iw);
+CL_h_OGE = 2*pi*(ARh/(ARh+2))*(alpha-alpha_0h+ih+eps);
+CL_w_IGE = CL_w_OGE*mu_Lw;
+CL_h_IGE = CL_h_OGE*mu_Lh; % CORREGIDO: Elevador retirado de aquí para control puro en Cm
+mu_Dw = 1 - exp(-10.1*(abs(hw/bw)^0.686));
+mu_Dh = 1 - exp(-10.1*(abs(hh/bh)^0.686));
+CD_iw_IGE = (CL_w_OGE^2)/(pi*ARw*e0w)*mu_Dw;
+CD_ih_IGE = (CL_h_OGE^2)/(pi*ARh*e0h)*mu_Dh;
+C_D_e = -0.0000108*u2^2+0.000715*u2;
+Dtot = Q*(CD_0*Sw + CD_iw_IGE*Sw + CD_ih_IGE*Sh + C_D_e*Sh);
+Ltot = Q*(CL_w_IGE*Sw + CL_h_IGE*Sh);
+CQ = -0.019*beta*180/pi;
+FA_s = [-Dtot; CQ*Q*Sw; -Ltot];
+C_bs = [cos(alpha) 0 -sin(alpha); 0 1 0; sin(alpha) 0 cos(alpha)];
+FA_b = C_bs*FA_s;
+% Parámetros aerodinámicos longitudinales (Pitch)
+Cm_alpha = -1.14; Cm_q = -5.0; Cm_de = -3.0; Cm_h = 0.05;
+Delta_Cm_IGE = -Cm_h * exp(-4.0 * abs(hw/bw));
+% Parámetros aerodinámicos laterales/direccionales (Roll & Yaw)
+Cl_da = -0.5;   % Autoridad del alerón sobre el Roll
+Cn_dr = -0.3;   % Autoridad del timón sobre el Yaw
+Cl_p  = -2.0;   % Amortiguación del Roll (Damping)
+Cn_r  = -1.5;   % Amortiguación del Yaw (Damping)
+% Momentos aerodinámicos
+% Cl = -0.0005*beta*180/pi + Cl_p*(p_aero*bw/(2*Va)) + Cl_da*u1;
+Cl = -0.0286*beta + Cl_p*(p_aero*bw/(2*Va)) + Cl_da*u1;
+Cm = Cm_alpha*alpha + Delta_Cm_IGE + Cm_q*(q_aero*cbar/(2*Va)) + Cm_de*u2; 
+% Cn = -0.002*beta*180/pi  + Cn_r*(r_aero*bw/(2*Va)) + Cn_dr*u3;
+Cn = -0.1146*beta + Cn_r*(r_aero*bw/(2*Va)) + Cn_dr*u3;
+MAcg_b = [Cl;Cm;Cn].*[bw*Q*Sw; cbar*Q*Sw; bw*Q*Sw];
+% Motores (CORREGIDO: Sin la división por Tp)
+km = 37.42; Cp = 0.57; D = 0.635; Sp = pi*(D^2/4);
+Vd1 = Va + u4*(km-Va); Tp1 = 0.5*rho*Sp*Cp*Vd1*(Vd1-Va);
+Vd2 = Va + u5*(km-Va); Tp2 = 0.5*rho*Sp*Cp*Vd2*(Vd2-Va);
+FE1_b = [Tp1*cos(-5*pi/180); 0; Tp1*sin(5*pi/180)];
+FE2_b = [Tp2*cos(-5*pi/180); 0; Tp2*sin(5*pi/180)];
+FE_b = FE1_b + FE2_b;
+MEcg1_b = cross([Xcg-Xapt1; Yapt1-Ycg; Zcg-Zapt1], FE1_b);
+MEcg2_b = cross([Xcg-Xapt2; Yapt2-Ycg; Zcg-Zapt2], FE2_b);
+MEcg_b = MEcg1_b + MEcg2_b;
+g_b = [-g*sin(theta); g*cos(theta)*sin(phi); g*cos(theta)*cos(phi)];
+Fg_b = m*g_b;
+F_b = Fg_b + FE_b + FA_b;
+x1to3dot = (1/m)*F_b - cross(wbe_b,V_b);
+Mcg_b = MAcg_b + MEcg_b;
+Ixx = 39.71; Iyy = 85.51; Izz = 114.39; Ixz = 8.97;
+Gamma = Ixx*Izz - Ixz^2; 
+p = wbe_b(1); q = wbe_b(2); r = wbe_b(3);
+L = Mcg_b(1); M = Mcg_b(2); N = Mcg_b(3);
+p_dot = (Izz*L + Ixz*N - (Ixz*(Iyy - Ixx - Izz)*p + (Ixz^2 + Izz*(Izz - Iyy))*r)*q) / Gamma;
+q_dot = (M - (Ixx - Izz)*p*r - Ixz*(p^2 - r^2)) / Iyy;
+r_dot = (Ixz*L + Ixx*N + (Ixz*(Iyy - Ixx - Izz)*r + (Ixz^2 + Ixx*(Ixx - Iyy))*p)*q) / Gamma;
+x4to6dot = [p_dot; q_dot; r_dot];
+H_phi = [1 sin(phi)*tan(theta) cos(phi)*tan(theta);
+         0 cos(phi) -sin(phi);
+         0 sin(phi)/cos(theta) cos(phi)/cos(theta)];
+x7to9dot = H_phi*wbe_b;
+x10to12dot = rot_body_to_ned(X); % Llamada a la cinemática
+LD_ratio = Ltot / Dtot;
+% Retornar TODAS las variables
+XDOT = [x1to3dot; x4to6dot; x7to9dot; x10to12dot; LD_ratio; F_b; Mcg_b; CQ; Cl; Cm; Cn; alpha; beta; CL_w_OGE; CL_h_OGE; CL_w_IGE; CL_h_IGE; CD_iw_IGE; CD_ih_IGE; Fg_b; FE_b; FA_b];
+end
+%------------------------- LOCAL FUNCTIONS -------------------------
+function [V_NED] = rot_body_to_ned(X)
+%#codegen
+V_body=[X(1);X(2);X(3)];
+roll  = X(7); % phi
+pitch = X(8); % theta
+yaw   = X(9); % psi
+c_phi = cos(roll);  s_phi = sin(roll);
+c_the = cos(pitch); s_the = sin(pitch);
+c_psi = cos(yaw);   s_psi = sin(yaw);
+R = [c_the*c_psi,  s_phi*s_the*c_psi - c_phi*s_psi,  c_phi*s_the*c_psi + s_phi*s_psi;
+     c_the*s_psi,  s_phi*s_the*s_psi + c_phi*c_psi,  c_phi*s_the*s_psi - s_phi*c_psi;
+     -s_the,       s_phi*c_the,                      c_phi*c_the];
+V_NED = R * V_body;
+V_NED = [V_NED(1); V_NED(2); V_NED(3)];
+end
