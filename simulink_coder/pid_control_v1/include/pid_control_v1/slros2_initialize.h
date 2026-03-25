@@ -1,5 +1,5 @@
 // Copyright 2022-2025 The MathWorks, Inc.
-// Generated 24-Mar-2026 15:50:44
+// Generated 24-Mar-2026 21:15:05
 #ifndef _SLROS2_INITIALIZE_H_
 #define _SLROS2_INITIALIZE_H_
 #include "pid_control_V1_types.h"
@@ -33,18 +33,18 @@ inline rclcpp::QoS getQOSSettingsFromRMW(const rmw_qos_profile_t& qosProfile) {
   rclcpp::QoS qos(init, qosProfile);
   return qos;
 }
+// pid_control_V1/SUBSYSTEM_MODEL/Subscribe1_TURBULENCIA1
+extern SimulinkSubscriber<std_msgs::msg::Bool,SL_Bus_std_msgs_Bool> Sub_pid_control_V1_423;
+// pid_control_V1/SUBSYSTEM_MODEL/Subscribe_HEAVE
+extern SimulinkSubscriber<std_msgs::msg::Float64,SL_Bus_std_msgs_Float64> Sub_pid_control_V1_443;
+// pid_control_V1/SUBSYSTEM_MODEL/Subscribe_RATE
+extern SimulinkSubscriber<std_msgs::msg::Float64,SL_Bus_std_msgs_Float64> Sub_pid_control_V1_445;
+// pid_control_V1/SUBSYSTEM_MODEL/Subscribe_TURBULENCIA
+extern SimulinkSubscriber<std_msgs::msg::Bool,SL_Bus_std_msgs_Bool> Sub_pid_control_V1_417;
 // pid_control_V1/Subscribe-ALTURA1
 extern SimulinkSubscriber<std_msgs::msg::Float64,SL_Bus_std_msgs_Float64> Sub_pid_control_V1_435;
 // pid_control_V1/Subscribe-YAW
 extern SimulinkSubscriber<std_msgs::msg::Float64,SL_Bus_std_msgs_Float64> Sub_pid_control_V1_377;
-// pid_control_V1/Subsystem/Subscribe
-extern SimulinkSubscriber<std_msgs::msg::Bool,SL_Bus_std_msgs_Bool> Sub_pid_control_V1_417;
-// pid_control_V1/Subsystem/Subscribe1
-extern SimulinkSubscriber<std_msgs::msg::Bool,SL_Bus_std_msgs_Bool> Sub_pid_control_V1_423;
-// pid_control_V1/Subsystem/Subscribe2
-extern SimulinkSubscriber<std_msgs::msg::Float64,SL_Bus_std_msgs_Float64> Sub_pid_control_V1_443;
-// pid_control_V1/Subsystem/Subscribe3
-extern SimulinkSubscriber<std_msgs::msg::Float64,SL_Bus_std_msgs_Float64> Sub_pid_control_V1_445;
 // pid_control_V1/Call Service
 extern SimulinkServiceCaller<gazebo_msgs::srv::SetEntityState,SL_Bus_gazebo_msgs_SetEntityStateRequest,SL_Bus_gazebo_msgs_SetEntityStateResponse> ServCall_pid_control_V1_326;
 #endif
