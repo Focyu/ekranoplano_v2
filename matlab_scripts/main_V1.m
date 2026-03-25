@@ -20,11 +20,11 @@ x_nom(8) = 2.0 * (pi/180);  % Theta (Pitch)
 % 3. Posición inicial
 x_nom(10) = 0;     
 x_nom(11) = 0;     
-x_nom(12) = -1.05; % altura inicial z_NED (5 cm sobre el agua en IGE)
+x_nom(12) = -1.05; % altura inicial z_NED
 
 u_nom = zeros(5,1);
 u_nom(2) = -6.0 * pi/180; % Compensación de elevador
-u_nom(4:5) = 0.75;        % Acelerador al 75% inicial (motores empujan más)
+u_nom(4:5) = 0.80;        % Acelerador al 75% inicial (motores empujan más)
 
 x0 = x_nom;
 
@@ -38,30 +38,30 @@ Kd_u = 0.005;
 
 % 2. Lazo de Altura
 h_sp = 1.0;    % Setpoint de altura (5 cm)
-Kp_h = 2.50;    % Mismo Kp_h agresivo para errores milimétricos
-Ki_h = 0.5;
-Kd_h = 3.5;
+Kp_h = 2.0;    % Mismo Kp_h agresivo para errores milimétricos
+Ki_h = 0.25;
+Kd_h = 4.5;
 
 % Límite de seguridad
 theta_max =  5.0 * (pi/180); 
 theta_min = -3.0 * (pi/180); 
 
 % 3. Lazo Interno de Elevador (Pitch)
-Kp_pitch = -0.3;   
-Ki_pitch = -0.05;  
-Kd_pitch = -0.25;   
+Kp_pitch = -0.25;   
+Ki_pitch = -0.03;  
+Kd_pitch = -0.35;   
 
 % 4. Lazo de Timón (Yaw)
 psi_sp = 0 * (pi/180); 
 Kp_yaw = -0.43;   
-Ki_yaw = -0.007;  
+Ki_yaw = -0.005;  
 Kd_yaw = -0.145;   
 
 % 5. Lazo de Alerones (Roll)
 phi_sp = 0.0; 
-Kp_roll = -0.72;   
-Ki_roll = -0.015;  
-Kd_roll = -0.21;   
+Kp_roll = -0.60;   
+Ki_roll = -0.010;  
+Kd_roll = -0.28;   
 
 
 
