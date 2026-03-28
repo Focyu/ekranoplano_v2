@@ -6,9 +6,9 @@
  *
  * Code generation for model "pid_control_V1".
  *
- * Model version              : 12.108
+ * Model version              : 12.115
  * Simulink Coder version : 25.2 (R2025b) 28-Jul-2025
- * C++ source code generated on : Tue Mar 24 21:14:46 2026
+ * C++ source code generated on : Fri Mar 27 23:21:18 2026
  *
  * Target selection: ert.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -24,6 +24,14 @@
 #include "rtw_solver.h"
 #include "slros2_initialize.h"
 #include "pid_control_V1_types.h"
+
+extern "C"
+{
+
+#include "rt_nonfinite.h"
+
+}
+
 #include <string.h>
 
 extern "C"
@@ -37,13 +45,6 @@ extern "C"
 {
 
 #include "rtGetNaN.h"
-
-}
-
-extern "C"
-{
-
-#include "rt_nonfinite.h"
 
 }
 
@@ -192,16 +193,23 @@ struct B_pid_control_V1_T {
   real_T TmpSignalConversionAtSFunct[5];/* '<S10>/MATLAB Function - MODEL' */
   char_T b_zeroDelimTopic[25];
   real_T wbe_b[3];
-  real_T FA_b[3];
   real_T F_b[3];
-  real_T Product_be[3];                /* '<S310>/Product' */
-  real_T wbe_b_m[3];
+  real_T Product_m[3];                 /* '<S318>/Product' */
+  real_T Dtot[3];
   char_T b_zeroDelimTopic_c[22];
   char_T b_zeroDelimTopic_k[22];
   char_T b_zeroDelimTopic_cx[17];
   char_T b_zeroDelimTopic_b[17];
   sJ4ih70VmKcvCeguWN0mNVF deadline;
   sJ4ih70VmKcvCeguWN0mNVF deadline_p;
+  real_T w1_c[2];                      /* '<S301>/w1' */
+  real_T w_d[2];                       /* '<S300>/w' */
+  real_T w_e0[2];                      /* '<S299>/w' */
+  real_T UnaryMinus[2];                /* '<S299>/Unary Minus' */
+  real_T w_o[2];                       /* '<S298>/w' */
+  real_T sigma_w[2];                   /* '<S298>/sigma_w' */
+  uint8_T stringOut[128];              /* '<Root>/MATLAB Function1' */
+  uint8_T stringOut_l[128];            /* '<Root>/MATLAB Function' */
   real_T frac[2];
   real_T dv[2];
   real_T Switch3;                      /* '<Root>/Switch3' */
@@ -211,30 +219,37 @@ struct B_pid_control_V1_T {
   real_T FilterCoefficient_c;          /* '<S52>/Filter Coefficient' */
   real_T Saturation_k;                 /* '<S56>/Saturation' */
   real_T Saturation_i;                 /* '<Root>/Saturation' */
+  real_T RateLimiter;                  /* '<Root>/Rate Limiter' */
   real_T FilterCoefficient_m;          /* '<S156>/Filter Coefficient' */
   real_T Saturation_f;                 /* '<S160>/Saturation' */
   real_T Switch2;                      /* '<Root>/Switch2' */
   real_T FilterCoefficient_p;          /* '<S208>/Filter Coefficient' */
   real_T Saturation_m;                 /* '<S212>/Saturation' */
+  real_T FilterCoefficient_cv;         /* '<S262>/Filter Coefficient' */
+  real_T Saturation_o;                 /* '<S266>/Saturation' */
+  real_T Memory[3];                    /* '<S10>/Memory' */
+  real_T Memory1[3];                   /* '<S10>/Memory1' */
   real_T Switch;                       /* '<S39>/Switch' */
   real_T SumI4;                        /* '<S93>/SumI4' */
   real_T SumI4_i;                      /* '<S145>/SumI4' */
   real_T IntegralGain;                 /* '<S202>/Integral Gain' */
-  real_T FilterCoefficient_cv;         /* '<S262>/Filter Coefficient' */
   real_T Switch_j;                     /* '<S249>/Switch' */
-  real_T Saturation_o;                 /* '<S266>/Saturation' */
-  real_T Memory[3];                    /* '<S10>/Memory' */
-  real_T Memory1[3];                   /* '<S10>/Memory1' */
+  real_T Product[4];                   /* '<S297>/Product' */
+  real_T UnitConversion[3];            /* '<S279>/Unit Conversion' */
+  real_T Merge[3];                     /* '<S309>/Merge' */
+  real_T data;
+  real_T data_n;
   real_T Power;                        /* '<S10>/Product2' */
   real_T Gain3;                        /* '<S10>/Gain3' */
   real_T EnergykWh;                    /* '<S10>/Gain1' */
   real_T powerdemand;                  /* '<S10>/Divide' */
   real_T loadtorque;                   /* '<S10>/Divide1' */
   real_T Output;                       /* '<S277>/Output' */
-  real_T Product[4];                   /* '<S297>/Product' */
   real_T Sum[3];                       /* '<S10>/Sum' */
   real_T Sum1[3];                      /* '<S10>/Sum1' */
   real_T XDOT[40];                     /* '<S10>/MATLAB Function - MODEL' */
+  real_T CL_total;                     /* '<S10>/MATLAB Function - MODEL' */
+  real_T h_out;                        /* '<S10>/MATLAB Function - MODEL' */
   real_T w[2];                         /* '<S303>/w' */
   real_T w_a[2];                       /* '<S303>/w ' */
   real_T LwgV1[2];                     /* '<S303>/Lwg//V 1' */
@@ -242,16 +257,19 @@ struct B_pid_control_V1_T {
   real_T w_e[2];                       /* '<S302>/w ' */
   real_T w1[2];                        /* '<S302>/w 1' */
   real_T w_n[2];                       /* '<S301>/w' */
-  real_T w1_c[2];                      /* '<S301>/w1' */
-  real_T w_d[2];                       /* '<S300>/w' */
-  real_T w_e0[2];                      /* '<S299>/w' */
-  real_T UnaryMinus[2];                /* '<S299>/Unary Minus' */
-  real_T w_o[2];                       /* '<S298>/w' */
-  real_T sigma_w[2];                   /* '<S298>/sigma_w' */
   real_T u2;
+  real_T w_r;
   real_T Va;
+  real_T beta;
   real_T q_aero;
+  real_T hw;
+  real_T hh;
   real_T Q;
+  real_T CL_w_OGE;
+  real_T CL_h_OGE;
+  real_T CD_iw_IGE;
+  real_T CD_ih_IGE;
+  real_T Dtot_c;
   real_T Ltot;
   real_T CQ;
   real_T Cl;
@@ -264,18 +282,13 @@ struct B_pid_control_V1_T {
   real_T s_the;
   real_T c_psi;
   real_T s_psi;
-  real_T sina;
-  real_T sinb;
-  real_T sinc;
-  real_T cosa;
-  real_T cosb;
-  real_T cosc;
   real_T Sum2_l;                       /* '<Root>/Sum2' */
   real_T Sum_b;                        /* '<S110>/Sum' */
   real_T SignPreSat;                   /* '<S39>/SignPreSat' */
   real_T Sum1_g;                       /* '<Root>/Sum1' */
   real_T Sum_hl;                       /* '<S162>/Sum' */
   real_T Sum5;                         /* '<Root>/Sum5' */
+  real_T SignPreSat_h;                 /* '<S249>/SignPreSat' */
   real_T FE1_b_idx_1;
   real_T Mcg_b_idx_2;
   real_T Mcg_b_idx_0;
@@ -283,15 +296,17 @@ struct B_pid_control_V1_T {
   real_T FE2_b_idx_2;
   real_T Fg_b_idx_2;
   real_T Fg_b_idx_1;
+  real_T FA_b_idx_0;
+  real_T FA_b_idx_1;
+  real_T FA_b_idx_2;
   real_T c_the_tmp;
-  real_T c_the_tmp_c;
+  real_T c_the_tmp_f;
+  real_T Ltot_tmp;
   SL_Bus_std_msgs_Float64 SourceBlock_o2_k;/* '<S284>/SourceBlock' */
   SL_Bus_std_msgs_Float64 SourceBlock_o2_p;/* '<S283>/SourceBlock' */
   uint32_T bpIndex[2];
   uint32_T lengthOut;                  /* '<Root>/MATLAB Function1' */
   uint32_T lengthOut_e;                /* '<Root>/MATLAB Function' */
-  uint8_T stringOut[128];              /* '<Root>/MATLAB Function1' */
-  uint8_T stringOut_l[128];            /* '<Root>/MATLAB Function' */
   boolean_T Compare;                   /* '<S278>/Compare' */
   boolean_T AND3;                      /* '<S39>/AND3' */
   boolean_T Memory_a;                  /* '<S39>/Memory' */
@@ -323,10 +338,12 @@ struct DW_pid_control_V1_T {
   real_T UnitDelay3_DSTATE;            /* '<Root>/Unit Delay3' */
   real_T UnitDelay2_DSTATE;            /* '<Root>/Unit Delay2' */
   real_T Memory2_PreviousInput[12];    /* '<S10>/Memory2' */
+  real_T PrevY;                        /* '<Root>/Rate Limiter' */
+  real_T LastMajorTime;                /* '<Root>/Rate Limiter' */
   real_T Memory_PreviousInput[3];      /* '<S10>/Memory' */
   real_T Memory1_PreviousInput[3];     /* '<S10>/Memory1' */
-  real_T NextOutput;                   /* '<S277>/White Noise' */
-  real_T NextOutput_j[4];              /* '<S297>/White Noise' */
+  real_T NextOutput[4];                /* '<S297>/White Noise' */
+  real_T NextOutput_k;                 /* '<S277>/White Noise' */
   struct {
     void *LoggedData;
   } ToWorkspace_PWORK;                 /* '<Root>/To Workspace' */
@@ -469,18 +486,19 @@ struct DW_pid_control_V1_T {
 
   uint32_T PreLookUpIndexSearchprobofexcee;
                         /* '<S304>/PreLook-Up Index Search  (prob of exceed)' */
-  uint32_T RandSeed;                   /* '<S277>/White Noise' */
   uint32_T PreLookUpIndexSearchaltitude_DW;
                               /* '<S304>/PreLook-Up Index Search  (altitude)' */
-  uint32_T RandSeed_i[4];              /* '<S297>/White Noise' */
+  uint32_T RandSeed[4];                /* '<S297>/White Noise' */
+  uint32_T RandSeed_a;                 /* '<S277>/White Noise' */
   robotics_slcore_internal_bloc_T obj_c;
                              /* '<Root>/Coordinate Transformation Conversion' */
   int8_T ifHeightMaxlowaltitudeelseifHei;
-  /* '<S292>/if Height < Max low altitude  elseif Height > Min isotropic altitude ' */
-  int8_T ifHeightMaxlowaltitudeelseifH_k;
   /* '<S293>/if Height < Max low altitude  elseif Height > Min isotropic altitude ' */
+  int8_T ifHeightMaxlowaltitudeelseifH_a;
+  /* '<S292>/if Height < Max low altitude  elseif Height > Min isotropic altitude ' */
   boolean_T IC_FirstOutputTime;        /* '<S10>/IC' */
   boolean_T Integrator_DWORK1;         /* '<S10>/Integrator' */
+  boolean_T PrevLimited;               /* '<Root>/Rate Limiter' */
   boolean_T Memory_PreviousInput_o;    /* '<S39>/Memory' */
   boolean_T Memory_PreviousInput_a;    /* '<S249>/Memory' */
   boolean_T objisempty;                /* '<S12>/SourceBlock' */
@@ -756,11 +774,11 @@ class pid_control_V1
     *obj);
   void pid_con_ServiceCaller_setupImpl(const ros_slros2_internal_block_Ser_T
     *obj);
-  void pid_contro_Subscriber_setupImpl(const ros_slros2_internal_block_Sub_T
-    *obj);
   void pid_cont_Subscriber_setupImpl_o(const ros_slros2_internal_block_Sub_T
     *obj);
   void pid_con_Subscriber_setupImpl_on(const ros_slros2_internal_block_Sub_T
+    *obj);
+  void pid_contro_Subscriber_setupImpl(const ros_slros2_internal_block_Sub_T
     *obj);
   void pid_co_Subscriber_setupImpl_onh(const ros_slros2_internal_block_Sub_T
     *obj);
