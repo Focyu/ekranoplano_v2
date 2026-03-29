@@ -1,9 +1,11 @@
-function [XDOT, Va_out] = Model(X, U, U_wind, W_wind)
+function [XDOT, Va_out, CL_total, h_out] = Model(X, U, U_wind, W_wind)
 % Modelo Dinámico del Ekranoplano AirFish 8 (Sincronizado)
 % ESCALA: 1:21.5 | Soporte Coder y Viento
 %#codegen
 coder.varsize('XDOT', [40, 1], [0, 0]);
 coder.varsize('Va_out', [1, 1], [0, 0]);
+coder.varsize('CL_total', [1, 1], [0, 0]);
+coder.varsize('h_out', [1, 1], [0, 0]);
 
 %-----------STATE AND CONTROL VECTORS-------------
 x1=X(1); x2=X(2); x3=X(3); x4=X(4); x5=X(5); x6=X(6);
@@ -121,6 +123,8 @@ x10to12dot = rot_body_to_ned(X(1:9)); % Llamada a cinemática
 
 LD_ratio = Ltot / Dtot;
 XDOT = [x1to3dot; x4to6dot; x7to9dot; x10to12dot; LD_ratio; F_b; Mcg_b; CQ; Cl; Cm; Cn; alpha; beta; CL_w_OGE; CL_h_OGE; CL_w_IGE; CL_h_IGE; CD_iw_IGE; CD_ih_IGE; Fg_b; FE_b; FA_b];
+CL_total = (CL_w_IGE * Sw + CL_h_IGE * Sh) / (Sw + Sh);
+h_out = -x12;
 end
 
 %------------------------- LOCAL FUNCTIONS -------------------------

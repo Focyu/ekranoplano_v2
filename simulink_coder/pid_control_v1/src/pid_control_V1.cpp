@@ -6,9 +6,9 @@
  *
  * Code generation for model "pid_control_V1".
  *
- * Model version              : 12.115
+ * Model version              : 12.123
  * Simulink Coder version : 25.2 (R2025b) 28-Jul-2025
- * C++ source code generated on : Fri Mar 27 23:21:18 2026
+ * C++ source code generated on : Sat Mar 28 20:25:43 2026
  *
  * Target selection: ert.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -357,6 +357,68 @@ void pid_control_V1::pid_con_ServiceCaller_setupImpl(const
     (&pid_control_V1_B.b_zeroDelimTopic[0], qos_profile);
 }
 
+void pid_control_V1::pid_co_Subscriber_setupImpl_onh(const
+  ros_slros2_internal_block_Sub_T *obj)
+{
+  rmw_qos_profile_t qos_profile;
+  sJ4ih70VmKcvCeguWN0mNVF deadline;
+  sJ4ih70VmKcvCeguWN0mNVF lifespan;
+  sJ4ih70VmKcvCeguWN0mNVF liveliness_lease_duration;
+  static const char_T b_zeroDelimTopic[22] = "/setpoint/turbulencia";
+  qos_profile = rmw_qos_profile_default;
+
+  /* Start for MATLABSystem: '<S285>/SourceBlock' */
+  deadline.sec = 0.0;
+  deadline.nsec = 0.0;
+  lifespan.sec = 0.0;
+  lifespan.nsec = 0.0;
+  liveliness_lease_duration.sec = 0.0;
+  liveliness_lease_duration.nsec = 0.0;
+  SET_QOS_VALUES(qos_profile, RMW_QOS_POLICY_HISTORY_KEEP_LAST, (size_t)10.0,
+                 RMW_QOS_POLICY_DURABILITY_VOLATILE,
+                 RMW_QOS_POLICY_RELIABILITY_RELIABLE, deadline, lifespan,
+                 RMW_QOS_POLICY_LIVELINESS_AUTOMATIC, liveliness_lease_duration,
+                 (bool)obj->QOSAvoidROSNamespaceConventions);
+  for (int32_T i = 0; i < 22; i++) {
+    /* Start for MATLABSystem: '<S285>/SourceBlock' */
+    pid_control_V1_B.b_zeroDelimTopic_k[i] = b_zeroDelimTopic[i];
+  }
+
+  Sub_pid_control_V1_417.createSubscriber(&pid_control_V1_B.b_zeroDelimTopic_k[0],
+    qos_profile);
+}
+
+void pid_control_V1::pid_contro_Subscriber_setupImpl(const
+  ros_slros2_internal_block_Sub_T *obj)
+{
+  rmw_qos_profile_t qos_profile;
+  sJ4ih70VmKcvCeguWN0mNVF deadline;
+  sJ4ih70VmKcvCeguWN0mNVF lifespan;
+  sJ4ih70VmKcvCeguWN0mNVF liveliness_lease_duration;
+  static const char_T b_zeroDelimTopic[22] = "/setpoint/turbulencia";
+  qos_profile = rmw_qos_profile_default;
+
+  /* Start for MATLABSystem: '<S282>/SourceBlock' */
+  deadline.sec = 0.0;
+  deadline.nsec = 0.0;
+  lifespan.sec = 0.0;
+  lifespan.nsec = 0.0;
+  liveliness_lease_duration.sec = 0.0;
+  liveliness_lease_duration.nsec = 0.0;
+  SET_QOS_VALUES(qos_profile, RMW_QOS_POLICY_HISTORY_KEEP_LAST, (size_t)10.0,
+                 RMW_QOS_POLICY_DURABILITY_VOLATILE,
+                 RMW_QOS_POLICY_RELIABILITY_RELIABLE, deadline, lifespan,
+                 RMW_QOS_POLICY_LIVELINESS_AUTOMATIC, liveliness_lease_duration,
+                 (bool)obj->QOSAvoidROSNamespaceConventions);
+  for (int32_T i = 0; i < 22; i++) {
+    /* Start for MATLABSystem: '<S282>/SourceBlock' */
+    pid_control_V1_B.b_zeroDelimTopic_c[i] = b_zeroDelimTopic[i];
+  }
+
+  Sub_pid_control_V1_423.createSubscriber(&pid_control_V1_B.b_zeroDelimTopic_c[0],
+    qos_profile);
+}
+
 void pid_control_V1::pid_cont_Subscriber_setupImpl_o(const
   ros_slros2_internal_block_Sub_T *obj)
 {
@@ -417,68 +479,6 @@ void pid_control_V1::pid_con_Subscriber_setupImpl_on(const
 
   Sub_pid_control_V1_445.createSubscriber(&pid_control_V1_B.b_zeroDelimTopic_cx
     [0], qos_profile);
-}
-
-void pid_control_V1::pid_contro_Subscriber_setupImpl(const
-  ros_slros2_internal_block_Sub_T *obj)
-{
-  rmw_qos_profile_t qos_profile;
-  sJ4ih70VmKcvCeguWN0mNVF deadline;
-  sJ4ih70VmKcvCeguWN0mNVF lifespan;
-  sJ4ih70VmKcvCeguWN0mNVF liveliness_lease_duration;
-  static const char_T b_zeroDelimTopic[22] = "/setpoint/turbulencia";
-  qos_profile = rmw_qos_profile_default;
-
-  /* Start for MATLABSystem: '<S282>/SourceBlock' */
-  deadline.sec = 0.0;
-  deadline.nsec = 0.0;
-  lifespan.sec = 0.0;
-  lifespan.nsec = 0.0;
-  liveliness_lease_duration.sec = 0.0;
-  liveliness_lease_duration.nsec = 0.0;
-  SET_QOS_VALUES(qos_profile, RMW_QOS_POLICY_HISTORY_KEEP_LAST, (size_t)10.0,
-                 RMW_QOS_POLICY_DURABILITY_VOLATILE,
-                 RMW_QOS_POLICY_RELIABILITY_RELIABLE, deadline, lifespan,
-                 RMW_QOS_POLICY_LIVELINESS_AUTOMATIC, liveliness_lease_duration,
-                 (bool)obj->QOSAvoidROSNamespaceConventions);
-  for (int32_T i = 0; i < 22; i++) {
-    /* Start for MATLABSystem: '<S282>/SourceBlock' */
-    pid_control_V1_B.b_zeroDelimTopic_k[i] = b_zeroDelimTopic[i];
-  }
-
-  Sub_pid_control_V1_423.createSubscriber(&pid_control_V1_B.b_zeroDelimTopic_k[0],
-    qos_profile);
-}
-
-void pid_control_V1::pid_co_Subscriber_setupImpl_onh(const
-  ros_slros2_internal_block_Sub_T *obj)
-{
-  rmw_qos_profile_t qos_profile;
-  sJ4ih70VmKcvCeguWN0mNVF deadline;
-  sJ4ih70VmKcvCeguWN0mNVF lifespan;
-  sJ4ih70VmKcvCeguWN0mNVF liveliness_lease_duration;
-  static const char_T b_zeroDelimTopic[22] = "/setpoint/turbulencia";
-  qos_profile = rmw_qos_profile_default;
-
-  /* Start for MATLABSystem: '<S285>/SourceBlock' */
-  deadline.sec = 0.0;
-  deadline.nsec = 0.0;
-  lifespan.sec = 0.0;
-  lifespan.nsec = 0.0;
-  liveliness_lease_duration.sec = 0.0;
-  liveliness_lease_duration.nsec = 0.0;
-  SET_QOS_VALUES(qos_profile, RMW_QOS_POLICY_HISTORY_KEEP_LAST, (size_t)10.0,
-                 RMW_QOS_POLICY_DURABILITY_VOLATILE,
-                 RMW_QOS_POLICY_RELIABILITY_RELIABLE, deadline, lifespan,
-                 RMW_QOS_POLICY_LIVELINESS_AUTOMATIC, liveliness_lease_duration,
-                 (bool)obj->QOSAvoidROSNamespaceConventions);
-  for (int32_T i = 0; i < 22; i++) {
-    /* Start for MATLABSystem: '<S285>/SourceBlock' */
-    pid_control_V1_B.b_zeroDelimTopic_c[i] = b_zeroDelimTopic[i];
-  }
-
-  Sub_pid_control_V1_417.createSubscriber(&pid_control_V1_B.b_zeroDelimTopic_c[0],
-    qos_profile);
 }
 
 real_T rt_urand_Upu32_Yd_f_pw_snf(uint32_T *u)
@@ -1118,25 +1118,27 @@ void pid_control_V1::step()
   pid_control_V1_B.wbe_b[0] = pid_control_V1_B.x[3];
   pid_control_V1_B.wbe_b[1] = pid_control_V1_B.x[4];
   pid_control_V1_B.wbe_b[2] = pid_control_V1_B.x[5];
-  pid_control_V1_B.CL_w_OGE = ((pid_control_V1_B.w_r - -0.065449846949787352) +
+  pid_control_V1_B.Vd1 = pid_control_V1_B.hw / 0.6977;
+  pid_control_V1_B.mu_Lw_out = rt_powd_snf(pid_control_V1_B.Vd1, 0.787) * 288.0 *
+    exp(rt_powd_snf(pid_control_V1_B.Vd1, 0.327) * -9.14) * 0.97986308862072491 /
+    5.9129476540958859 + 1.0;
+  pid_control_V1_B.hw = ((pid_control_V1_B.w_r - -0.065449846949787352) +
     0.017453292519943295) * 4.9604094530365153;
   pid_control_V1_B.CL_h_OGE = (((pid_control_V1_B.w_r - -0.074176493209759012) +
     0.0087266462599716477) - (0.56 / pid_control_V1_B.Va * 0.35 *
     pid_control_V1_B.q_aero + (pid_control_V1_B.w_r - -0.065449846949787352) *
     0.35)) * 4.8387748917360032;
-  pid_control_V1_B.Vd1 = pid_control_V1_B.hw / 0.6977;
-  pid_control_V1_B.hw = (rt_powd_snf(pid_control_V1_B.Vd1, 0.787) * 288.0 * exp
-    (rt_powd_snf(pid_control_V1_B.Vd1, 0.327) * -9.14) * 0.97986308862072491 /
-    5.9129476540958859 + 1.0) * pid_control_V1_B.CL_w_OGE;
+  pid_control_V1_B.CL_w_IGE = pid_control_V1_B.hw * pid_control_V1_B.mu_Lw_out;
   pid_control_V1_B.CD_ih_IGE = pid_control_V1_B.hh / 0.3808;
   pid_control_V1_B.hh = (rt_powd_snf(pid_control_V1_B.CD_ih_IGE, 0.787) * 288.0 *
     exp(rt_powd_snf(pid_control_V1_B.CD_ih_IGE, 0.327) * -9.14) *
     0.95628590200128227 / 5.35300902982722 + 1.0) * pid_control_V1_B.CL_h_OGE;
-  pid_control_V1_B.CD_iw_IGE = ((1.0 - exp(rt_powd_snf(pid_control_V1_B.Vd1,
+  pid_control_V1_B.mu_Dw_out = (1.0 - exp(rt_powd_snf(pid_control_V1_B.Vd1,
     0.814) * -4.74) * 0.97916641726789588) - exp(rt_powd_snf
     (pid_control_V1_B.Vd1, 0.758) * -3.88) * (pid_control_V1_B.Vd1 *
-    pid_control_V1_B.Vd1)) * (pid_control_V1_B.hw * pid_control_V1_B.hw /
-    21.205750411731103);
+    pid_control_V1_B.Vd1);
+  pid_control_V1_B.CD_iw_IGE = pid_control_V1_B.CL_w_IGE *
+    pid_control_V1_B.CL_w_IGE / 21.205750411731103 * pid_control_V1_B.mu_Dw_out;
   pid_control_V1_B.CD_ih_IGE = ((1.0 - exp(rt_powd_snf
     (pid_control_V1_B.CD_ih_IGE, 0.814) * -4.74) * 0.96770634751485862) - exp
     (rt_powd_snf(pid_control_V1_B.CD_ih_IGE, 0.758) * -3.88) *
@@ -1146,8 +1148,8 @@ void pid_control_V1::step()
     -1.08E-5 + 0.000715 * pid_control_V1_B.u2) * 0.02164 +
     ((pid_control_V1_B.CD_iw_IGE * 0.0649 + 0.00198594) +
      pid_control_V1_B.CD_ih_IGE * 0.02164)) * pid_control_V1_B.Q;
-  pid_control_V1_B.Ltot_tmp = pid_control_V1_B.hw * 0.0649 + pid_control_V1_B.hh
-    * 0.02164;
+  pid_control_V1_B.Ltot_tmp = pid_control_V1_B.CL_w_IGE * 0.0649 +
+    pid_control_V1_B.hh * 0.02164;
   pid_control_V1_B.Ltot = pid_control_V1_B.Ltot_tmp * pid_control_V1_B.Q;
   pid_control_V1_B.CQ = -0.019 * pid_control_V1_B.beta * 180.0 /
     3.1415926535897931;
@@ -1372,9 +1374,9 @@ void pid_control_V1::step()
   pid_control_V1_B.XDOT[22] = pid_control_V1_B.q_aero;
   pid_control_V1_B.XDOT[23] = pid_control_V1_B.w_r;
   pid_control_V1_B.XDOT[24] = pid_control_V1_B.beta;
-  pid_control_V1_B.XDOT[25] = pid_control_V1_B.CL_w_OGE;
+  pid_control_V1_B.XDOT[25] = pid_control_V1_B.hw;
   pid_control_V1_B.XDOT[26] = pid_control_V1_B.CL_h_OGE;
-  pid_control_V1_B.XDOT[27] = pid_control_V1_B.hw;
+  pid_control_V1_B.XDOT[27] = pid_control_V1_B.CL_w_IGE;
   pid_control_V1_B.XDOT[28] = pid_control_V1_B.hh;
   pid_control_V1_B.XDOT[29] = pid_control_V1_B.CD_iw_IGE;
   pid_control_V1_B.XDOT[30] = pid_control_V1_B.CD_ih_IGE;
@@ -1397,7 +1399,6 @@ void pid_control_V1::step()
   pid_control_V1_B.XDOT[36] = pid_control_V1_B.FE2_b_idx_0;
   pid_control_V1_B.XDOT[39] = pid_control_V1_B.FA_b_idx_2;
   pid_control_V1_B.CL_total = pid_control_V1_B.Ltot_tmp / 0.08654;
-  pid_control_V1_B.h_out = -pid_control_V1_B.x[11];
   if (tmp_0) {
     /* MATLAB Function: '<Root>/MATLAB Function' */
     memset(&pid_control_V1_B.stringOut_l[0], 0, sizeof(uint8_T) << 7U);
@@ -1437,9 +1438,9 @@ void pid_control_V1::step()
    */
   pid_control_V1_B.wbe_b[2] = (pid_control_V1_B.x[6] + 1.5707963267948966) / 2.0;
   pid_control_V1_B.beta = sin(pid_control_V1_B.wbe_b[0]);
-  pid_control_V1_B.CL_w_OGE = sin(pid_control_V1_B.wbe_b[1]);
+  pid_control_V1_B.hw = sin(pid_control_V1_B.wbe_b[1]);
   pid_control_V1_B.CL_h_OGE = sin(pid_control_V1_B.wbe_b[2]);
-  pid_control_V1_B.hw = cos(pid_control_V1_B.wbe_b[0]);
+  pid_control_V1_B.CL_w_IGE = cos(pid_control_V1_B.wbe_b[0]);
   pid_control_V1_B.hh = cos(pid_control_V1_B.wbe_b[1]);
   pid_control_V1_B.CD_iw_IGE = cos(pid_control_V1_B.wbe_b[2]);
 
@@ -1451,24 +1452,23 @@ void pid_control_V1::step()
   pid_control_V1_B.BusAssignment.state.pose.position.z = pid_control_V1_B.Gain;
 
   /* Start for MATLABSystem: '<Root>/Coordinate Transformation Conversion' */
-  pid_control_V1_B.w_r = pid_control_V1_B.hw * pid_control_V1_B.hh;
+  pid_control_V1_B.w_r = pid_control_V1_B.CL_w_IGE * pid_control_V1_B.hh;
 
   /* BusAssignment: '<Root>/Bus Assignment' incorporates:
    *  MATLABSystem: '<Root>/Coordinate Transformation Conversion'
    * */
   pid_control_V1_B.BusAssignment.state.pose.orientation.w =
-    pid_control_V1_B.beta * pid_control_V1_B.CL_w_OGE *
-    pid_control_V1_B.CL_h_OGE + pid_control_V1_B.w_r *
-    pid_control_V1_B.CD_iw_IGE;
+    pid_control_V1_B.beta * pid_control_V1_B.hw * pid_control_V1_B.CL_h_OGE +
+    pid_control_V1_B.w_r * pid_control_V1_B.CD_iw_IGE;
   pid_control_V1_B.BusAssignment.state.pose.orientation.z = pid_control_V1_B.w_r
     * pid_control_V1_B.CL_h_OGE - pid_control_V1_B.CD_iw_IGE *
-    pid_control_V1_B.beta * pid_control_V1_B.CL_w_OGE;
-  pid_control_V1_B.BusAssignment.state.pose.orientation.y = pid_control_V1_B.hw *
-    pid_control_V1_B.CD_iw_IGE * pid_control_V1_B.CL_w_OGE + pid_control_V1_B.hh
-    * pid_control_V1_B.beta * pid_control_V1_B.CL_h_OGE;
+    pid_control_V1_B.beta * pid_control_V1_B.hw;
+  pid_control_V1_B.BusAssignment.state.pose.orientation.y =
+    pid_control_V1_B.CL_w_IGE * pid_control_V1_B.CD_iw_IGE * pid_control_V1_B.hw
+    + pid_control_V1_B.hh * pid_control_V1_B.beta * pid_control_V1_B.CL_h_OGE;
   pid_control_V1_B.BusAssignment.state.pose.orientation.x = pid_control_V1_B.hh *
-    pid_control_V1_B.CD_iw_IGE * pid_control_V1_B.beta - pid_control_V1_B.hw *
-    pid_control_V1_B.CL_w_OGE * pid_control_V1_B.CL_h_OGE;
+    pid_control_V1_B.CD_iw_IGE * pid_control_V1_B.beta -
+    pid_control_V1_B.CL_w_IGE * pid_control_V1_B.hw * pid_control_V1_B.CL_h_OGE;
   memcpy(&pid_control_V1_B.BusAssignment.state.name[0],
          &pid_control_V1_B.stringOut_l[0], sizeof(uint8_T) << 7U);
   memcpy(&pid_control_V1_B.BusAssignment.state.reference_frame[0],
@@ -2021,25 +2021,25 @@ void pid_control_V1::step()
   pid_control_V1_B.CQ = -sin(pid_control_V1_B.x[7]);
   pid_control_V1_B.w_r = sin(pid_control_V1_B.x[7]);
   pid_control_V1_B.beta = cos(pid_control_V1_B.x[7]);
-  pid_control_V1_B.CL_w_OGE = cos(pid_control_V1_B.x[8]);
+  pid_control_V1_B.hw = cos(pid_control_V1_B.x[8]);
   pid_control_V1_B.CL_h_OGE = sin(pid_control_V1_B.x[8]);
-  pid_control_V1_B.hw = -sin(pid_control_V1_B.x[8]);
+  pid_control_V1_B.CL_w_IGE = -sin(pid_control_V1_B.x[8]);
   pid_control_V1_B.Dtot_c = cos(pid_control_V1_B.x[8]);
   pid_control_V1_B.hh = 0.0 * pid_control_V1_B.w_r + pid_control_V1_B.CD_ih_IGE;
   pid_control_V1_B.CD_iw_IGE = 0.0 * pid_control_V1_B.beta + pid_control_V1_B.CQ;
-  pid_control_V1_B.Ltot_tmp = pid_control_V1_B.CL_w_OGE * 0.0;
+  pid_control_V1_B.Ltot_tmp = pid_control_V1_B.hw * 0.0;
   pid_control_V1_B.Ltot = 0.0 * pid_control_V1_B.CD_ih_IGE;
   pid_control_V1_B.CD_ih_IGE = (pid_control_V1_B.Ltot +
     pid_control_V1_B.Ltot_tmp) + pid_control_V1_B.CL_h_OGE *
     pid_control_V1_B.w_r;
-  pid_control_V1_B.CL_w_OGE += pid_control_V1_B.CL_h_OGE * 0.0;
+  pid_control_V1_B.hw += pid_control_V1_B.CL_h_OGE * 0.0;
   pid_control_V1_B.CQ *= 0.0;
   pid_control_V1_B.CL_h_OGE = (pid_control_V1_B.CQ + pid_control_V1_B.Ltot_tmp)
     + pid_control_V1_B.CL_h_OGE * pid_control_V1_B.beta;
-  pid_control_V1_B.Ltot_tmp = pid_control_V1_B.hw * 0.0;
+  pid_control_V1_B.Ltot_tmp = pid_control_V1_B.CL_w_IGE * 0.0;
   pid_control_V1_B.w_r = (pid_control_V1_B.Ltot + pid_control_V1_B.Ltot_tmp) +
     pid_control_V1_B.w_r * pid_control_V1_B.Dtot_c;
-  pid_control_V1_B.hw += pid_control_V1_B.Dtot_c * 0.0;
+  pid_control_V1_B.CL_w_IGE += pid_control_V1_B.Dtot_c * 0.0;
   pid_control_V1_B.beta = (pid_control_V1_B.CQ + pid_control_V1_B.Ltot_tmp) +
     pid_control_V1_B.Dtot_c * pid_control_V1_B.beta;
   pid_control_V1_B.Dtot_c = pid_control_V1_B.CD_iw_IGE * 0.0;
@@ -2049,27 +2049,27 @@ void pid_control_V1::step()
   pid_control_V1_B.Ltot_tmp = pid_control_V1_B.CL_h_OGE * 0.0;
   pid_control_V1_B.RotationAnglestoDirectionCo[1] =
     (pid_control_V1_B.SignPreSat_h * pid_control_V1_B.CD_ih_IGE +
-     pid_control_V1_B.Sum1_g * pid_control_V1_B.CL_w_OGE) +
-    pid_control_V1_B.Ltot_tmp;
+     pid_control_V1_B.Sum1_g * pid_control_V1_B.hw) + pid_control_V1_B.Ltot_tmp;
   pid_control_V1_B.Ltot = pid_control_V1_B.beta * 0.0;
   pid_control_V1_B.RotationAnglestoDirectionCo[2] =
     (pid_control_V1_B.SignPreSat_h * pid_control_V1_B.w_r +
-     pid_control_V1_B.Sum1_g * pid_control_V1_B.hw) + pid_control_V1_B.Ltot;
+     pid_control_V1_B.Sum1_g * pid_control_V1_B.CL_w_IGE) +
+    pid_control_V1_B.Ltot;
   pid_control_V1_B.RotationAnglestoDirectionCo[3] = (pid_control_V1_B.hh *
     pid_control_V1_B.Sum5 + 0.0 * pid_control_V1_B.Sum_hl) +
     pid_control_V1_B.Dtot_c;
   pid_control_V1_B.RotationAnglestoDirectionCo[4] = (pid_control_V1_B.Sum5 *
-    pid_control_V1_B.CD_ih_IGE + pid_control_V1_B.CL_w_OGE *
-    pid_control_V1_B.Sum_hl) + pid_control_V1_B.Ltot_tmp;
+    pid_control_V1_B.CD_ih_IGE + pid_control_V1_B.hw * pid_control_V1_B.Sum_hl)
+    + pid_control_V1_B.Ltot_tmp;
   pid_control_V1_B.RotationAnglestoDirectionCo[5] = (pid_control_V1_B.Sum5 *
-    pid_control_V1_B.w_r + pid_control_V1_B.Sum_hl * pid_control_V1_B.hw) +
-    pid_control_V1_B.Ltot;
+    pid_control_V1_B.w_r + pid_control_V1_B.Sum_hl * pid_control_V1_B.CL_w_IGE)
+    + pid_control_V1_B.Ltot;
   pid_control_V1_B.RotationAnglestoDirectionCo[6] = pid_control_V1_B.hh * 0.0 +
     pid_control_V1_B.CD_iw_IGE;
   pid_control_V1_B.RotationAnglestoDirectionCo[7] = (pid_control_V1_B.CD_ih_IGE *
-    0.0 + pid_control_V1_B.CL_w_OGE * 0.0) + pid_control_V1_B.CL_h_OGE;
+    0.0 + pid_control_V1_B.hw * 0.0) + pid_control_V1_B.CL_h_OGE;
   pid_control_V1_B.RotationAnglestoDirectionCo[8] = (pid_control_V1_B.w_r * 0.0
-    + pid_control_V1_B.hw * 0.0) + pid_control_V1_B.beta;
+    + pid_control_V1_B.CL_w_IGE * 0.0) + pid_control_V1_B.beta;
 
   /* If: '<S293>/if Height < Max low altitude  elseif Height > Min isotropic altitude ' incorporates:
    *  Constant: '<S314>/max_height_low'
@@ -2238,10 +2238,36 @@ void pid_control_V1::step()
   /* Unit Conversion - from: ft/s to: m/s
      Expression: output = (0.3048*input) + (0) */
   tmp_3 = _mm_mul_pd(_mm_set1_pd(0.3048), _mm_loadu_pd(&pid_control_V1_B.wbe_b[0]));
+  _mm_storeu_pd(&pid_control_V1_B.wbe_b[0], tmp_3);
+  pid_control_V1_B.wbe_b[2] *= 0.3048;
+  if (tmp_0) {
+    /* MATLABSystem: '<S285>/SourceBlock' */
+    pid_control_V1_B.SourceBlock_o1_h = Sub_pid_control_V1_417.getLatestMessage(
+      &rtb_SourceBlock_o2_j);
 
-  /* UnitConversion: '<S279>/Unit Conversion' */
-  _mm_storeu_pd(&pid_control_V1_B.UnitConversion[0], tmp_3);
-  pid_control_V1_B.UnitConversion[2] = 0.3048 * pid_control_V1_B.wbe_b[2];
+    /* Outputs for Enabled SubSystem: '<S285>/Enabled Subsystem' */
+    pid_control_V1_EnabledSubsystem(pid_control_V1_B.SourceBlock_o1_h,
+      &rtb_SourceBlock_o2_j, &pid_control_V1_B.EnabledSubsystem_pt);
+
+    /* End of Outputs for SubSystem: '<S285>/Enabled Subsystem' */
+  }
+
+  /* Switch: '<S10>/Switch' */
+  if (pid_control_V1_B.EnabledSubsystem_pt.In1.data) {
+    /* Switch: '<S10>/Switch' */
+    pid_control_V1_B.Switch_p[0] = pid_control_V1_B.wbe_b[0];
+    pid_control_V1_B.Switch_p[1] = pid_control_V1_B.wbe_b[1];
+    pid_control_V1_B.Switch_p[2] = pid_control_V1_B.wbe_b[2];
+  } else {
+    /* Switch: '<S10>/Switch' incorporates:
+     *  Constant: '<S10>/Constant'
+     */
+    pid_control_V1_B.Switch_p[0] = 0.0;
+    pid_control_V1_B.Switch_p[1] = 0.0;
+    pid_control_V1_B.Switch_p[2] = 0.0;
+  }
+
+  /* End of Switch: '<S10>/Switch' */
 
   /* Outputs for Enabled SubSystem: '<S287>/Hpgw' incorporates:
    *  EnablePort: '<S298>/Enable'
@@ -2394,7 +2420,6 @@ void pid_control_V1::step()
 
   /* If: '<S292>/if Height < Max low altitude  elseif Height > Min isotropic altitude ' incorporates:
    *  Constant: '<S306>/max_height_low'
-   *  Merge: '<S309>/Merge'
    *  Product: '<S306>/Product1'
    *  Product: '<S311>/Product1'
    *  Product: '<S311>/Product2'
@@ -2432,95 +2457,27 @@ void pid_control_V1::step()
      *  ActionPort: '<S307>/Action Port'
      */
     /* SignalConversion generated from: '<S312>/Vector Concatenate' */
-    pid_control_V1_B.wbe_b[2] = pid_control_V1_B.w_d[0];
+    pid_control_V1_B.Product_m[2] = pid_control_V1_B.w_d[0];
 
     /* Trigonometry: '<S313>/Trigonometric Function1' incorporates:
      *  UnitConversion: '<S286>/Unit Conversion'
      */
     pid_control_V1_B.Sum2_l = sin(pid_control_V1_ConstB.UnitConversion);
     pid_control_V1_B.Sum_b = cos(pid_control_V1_ConstB.UnitConversion);
-    _mm_storeu_pd(&pid_control_V1_B.wbe_b[0], _mm_add_pd(_mm_mul_pd(_mm_set_pd
-      (pid_control_V1_B.Sum2_l, pid_control_V1_B.sigma_w[0]), _mm_set_pd
-      (pid_control_V1_B.sigma_w[0], pid_control_V1_B.Sum_b)), _mm_mul_pd
-      (_mm_mul_pd(_mm_set_pd(pid_control_V1_B.UnaryMinus[0],
+    _mm_storeu_pd(&pid_control_V1_B.Product_m[0], _mm_add_pd(_mm_mul_pd
+      (_mm_set_pd(pid_control_V1_B.Sum2_l, pid_control_V1_B.sigma_w[0]),
+       _mm_set_pd(pid_control_V1_B.sigma_w[0], pid_control_V1_B.Sum_b)),
+      _mm_mul_pd(_mm_mul_pd(_mm_set_pd(pid_control_V1_B.UnaryMinus[0],
       pid_control_V1_B.Sum2_l), _mm_set_pd(pid_control_V1_B.Sum_b,
       pid_control_V1_B.UnaryMinus[0])), _mm_set_pd(1.0, -1.0))));
 
     /* Product: '<S312>/Product' incorporates:
      *  Angle2Dcm: '<S10>/Rotation Angles to Direction Cosine Matrix'
      *  Concatenate: '<S312>/Vector Concatenate'
-     *  Merge: '<S309>/Merge'
      *  Product: '<S313>/Product1'
      *  Product: '<S313>/Product2'
+     *  Reshape: '<S312>/Reshape1'
      *  Sum: '<S313>/Sum'
-     */
-    pid_control_V1_B.Merge[0] = 0.0;
-    pid_control_V1_B.Merge[1] = 0.0;
-    pid_control_V1_B.Merge[2] = 0.0;
-    pid_control_V1_B.Sum2_l = pid_control_V1_B.Merge[0];
-    pid_control_V1_B.Sum_b = pid_control_V1_B.Merge[1];
-    pid_control_V1_B.SignPreSat = pid_control_V1_B.Merge[2];
-    for (i = 0; i < 3; i++) {
-      tmp_3 = _mm_add_pd(_mm_mul_pd(_mm_loadu_pd
-        (&pid_control_V1_B.RotationAnglestoDirectionCo[3 * i]), _mm_set1_pd
-        (pid_control_V1_B.wbe_b[i])), _mm_set_pd(pid_control_V1_B.Sum_b,
-        pid_control_V1_B.Sum2_l));
-      _mm_storeu_pd(&pid_control_V1_B.dv[0], tmp_3);
-      pid_control_V1_B.Sum2_l = pid_control_V1_B.dv[0];
-      pid_control_V1_B.Sum_b = pid_control_V1_B.dv[1];
-      pid_control_V1_B.SignPreSat +=
-        pid_control_V1_B.RotationAnglestoDirectionCo[3 * i + 2] *
-        pid_control_V1_B.wbe_b[i];
-    }
-
-    pid_control_V1_B.Merge[2] = pid_control_V1_B.SignPreSat;
-    pid_control_V1_B.Merge[1] = pid_control_V1_B.Sum_b;
-    pid_control_V1_B.Merge[0] = pid_control_V1_B.Sum2_l;
-
-    /* End of Product: '<S312>/Product' */
-    /* End of Outputs for SubSystem: '<S292>/Low altitude  rates' */
-    break;
-
-   case 1:
-    /* Outputs for IfAction SubSystem: '<S292>/Medium//High  altitude rates' incorporates:
-     *  ActionPort: '<S308>/Action Port'
-     */
-    /* Merge: '<S309>/Merge' incorporates:
-     *  Gain: '<S308>/Gain'
-     */
-    pid_control_V1_B.Merge[0] = pid_control_V1_B.sigma_w[1];
-    pid_control_V1_B.Merge[1] = pid_control_V1_B.UnaryMinus[1];
-    pid_control_V1_B.Merge[2] = pid_control_V1_B.w_d[1];
-
-    /* End of Outputs for SubSystem: '<S292>/Medium//High  altitude rates' */
-    break;
-
-   default:
-    /* Outputs for IfAction SubSystem: '<S292>/Interpolate  rates' incorporates:
-     *  ActionPort: '<S306>/Action Port'
-     */
-    /* Trigonometry: '<S311>/Trigonometric Function' incorporates:
-     *  UnitConversion: '<S286>/Unit Conversion'
-     */
-    pid_control_V1_B.Sum_b = sin(pid_control_V1_ConstB.UnitConversion);
-    pid_control_V1_B.SignPreSat = cos(pid_control_V1_ConstB.UnitConversion);
-    _mm_storeu_pd(&pid_control_V1_B.Product_m[0], _mm_add_pd(_mm_mul_pd
-      (_mm_set_pd(pid_control_V1_B.Sum_b, pid_control_V1_B.sigma_w[0]),
-       _mm_set_pd(pid_control_V1_B.sigma_w[0], pid_control_V1_B.SignPreSat)),
-      _mm_mul_pd(_mm_mul_pd(_mm_set_pd(pid_control_V1_B.UnaryMinus[0],
-      pid_control_V1_B.Sum_b), _mm_set_pd(pid_control_V1_B.SignPreSat,
-      pid_control_V1_B.UnaryMinus[0])), _mm_set_pd(1.0, -1.0))));
-
-    /* SignalConversion generated from: '<S310>/Vector Concatenate' incorporates:
-     *  Product: '<S311>/Product1'
-     *  Product: '<S311>/Product2'
-     *  Sum: '<S311>/Sum'
-     */
-    pid_control_V1_B.Product_m[2] = pid_control_V1_B.w_d[0];
-
-    /* Product: '<S310>/Product' incorporates:
-     *  Angle2Dcm: '<S10>/Rotation Angles to Direction Cosine Matrix'
-     *  Concatenate: '<S310>/Vector Concatenate'
      */
     pid_control_V1_B.SignPreSat_h = 0.0;
     pid_control_V1_B.Sum5 = 0.0;
@@ -2540,27 +2497,83 @@ void pid_control_V1::step()
     pid_control_V1_B.wbe_b[2] = pid_control_V1_B.Sum1_g;
     pid_control_V1_B.wbe_b[1] = pid_control_V1_B.Sum5;
     pid_control_V1_B.wbe_b[0] = pid_control_V1_B.SignPreSat_h;
-    tmp_3 = _mm_add_pd(_mm_div_pd(_mm_mul_pd(_mm_sub_pd(_mm_set_pd
-      (pid_control_V1_B.UnaryMinus[1], pid_control_V1_B.sigma_w[1]),
-      _mm_loadu_pd(&pid_control_V1_B.wbe_b[0])), _mm_sub_pd(_mm_set1_pd
-      (pid_control_V1_B.Sum2_l), _mm_set1_pd(1000.0))), _mm_set1_pd
-      (pid_control_V1_ConstB.Sum_a)), _mm_loadu_pd(&pid_control_V1_B.wbe_b[0]));
 
-    /* End of Outputs for SubSystem: '<S292>/Interpolate  rates' */
-    _mm_storeu_pd(&pid_control_V1_B.Merge[0], tmp_3);
+    /* End of Product: '<S312>/Product' */
+    /* End of Outputs for SubSystem: '<S292>/Low altitude  rates' */
+    break;
 
+   case 1:
+    /* Outputs for IfAction SubSystem: '<S292>/Medium//High  altitude rates' incorporates:
+     *  ActionPort: '<S308>/Action Port'
+     */
+    /* Gain: '<S308>/Gain' */
+    pid_control_V1_B.wbe_b[0] = pid_control_V1_B.sigma_w[1];
+    pid_control_V1_B.wbe_b[1] = pid_control_V1_B.UnaryMinus[1];
+    pid_control_V1_B.wbe_b[2] = pid_control_V1_B.w_d[1];
+
+    /* End of Outputs for SubSystem: '<S292>/Medium//High  altitude rates' */
+    break;
+
+   default:
     /* Outputs for IfAction SubSystem: '<S292>/Interpolate  rates' incorporates:
      *  ActionPort: '<S306>/Action Port'
      */
-    /* Merge: '<S309>/Merge' incorporates:
+    /* Trigonometry: '<S311>/Trigonometric Function' incorporates:
+     *  UnitConversion: '<S286>/Unit Conversion'
+     */
+    pid_control_V1_B.Sum_b = sin(pid_control_V1_ConstB.UnitConversion);
+    pid_control_V1_B.SignPreSat = cos(pid_control_V1_ConstB.UnitConversion);
+    _mm_storeu_pd(&pid_control_V1_B.wbe_b[0], _mm_add_pd(_mm_mul_pd(_mm_set_pd
+      (pid_control_V1_B.Sum_b, pid_control_V1_B.sigma_w[0]), _mm_set_pd
+      (pid_control_V1_B.sigma_w[0], pid_control_V1_B.SignPreSat)), _mm_mul_pd
+      (_mm_mul_pd(_mm_set_pd(pid_control_V1_B.UnaryMinus[0],
+      pid_control_V1_B.Sum_b), _mm_set_pd(pid_control_V1_B.SignPreSat,
+      pid_control_V1_B.UnaryMinus[0])), _mm_set_pd(1.0, -1.0))));
+
+    /* SignalConversion generated from: '<S310>/Vector Concatenate' incorporates:
+     *  Product: '<S311>/Product1'
+     *  Product: '<S311>/Product2'
+     *  Sum: '<S311>/Sum'
+     */
+    pid_control_V1_B.wbe_b[2] = pid_control_V1_B.w_d[0];
+
+    /* Product: '<S310>/Product' incorporates:
+     *  Angle2Dcm: '<S10>/Rotation Angles to Direction Cosine Matrix'
+     *  Concatenate: '<S310>/Vector Concatenate'
+     */
+    pid_control_V1_B.SignPreSat_h = 0.0;
+    pid_control_V1_B.Sum5 = 0.0;
+    pid_control_V1_B.Sum1_g = 0.0;
+    for (i = 0; i < 3; i++) {
+      tmp_3 = _mm_add_pd(_mm_mul_pd(_mm_loadu_pd
+        (&pid_control_V1_B.RotationAnglestoDirectionCo[3 * i]), _mm_set1_pd
+        (pid_control_V1_B.wbe_b[i])), _mm_set_pd(pid_control_V1_B.Sum5,
+        pid_control_V1_B.SignPreSat_h));
+      _mm_storeu_pd(&pid_control_V1_B.dv[0], tmp_3);
+      pid_control_V1_B.SignPreSat_h = pid_control_V1_B.dv[0];
+      pid_control_V1_B.Sum5 = pid_control_V1_B.dv[1];
+      pid_control_V1_B.Sum1_g += pid_control_V1_B.RotationAnglestoDirectionCo[3 *
+        i + 2] * pid_control_V1_B.wbe_b[i];
+    }
+
+    pid_control_V1_B.Product_m[2] = pid_control_V1_B.Sum1_g;
+    pid_control_V1_B.Product_m[1] = pid_control_V1_B.Sum5;
+    pid_control_V1_B.Product_m[0] = pid_control_V1_B.SignPreSat_h;
+    tmp_3 = _mm_add_pd(_mm_div_pd(_mm_mul_pd(_mm_sub_pd(_mm_set_pd
+      (pid_control_V1_B.UnaryMinus[1], pid_control_V1_B.sigma_w[1]),
+      _mm_loadu_pd(&pid_control_V1_B.Product_m[0])), _mm_sub_pd(_mm_set1_pd
+      (pid_control_V1_B.Sum2_l), _mm_set1_pd(1000.0))), _mm_set1_pd
+      (pid_control_V1_ConstB.Sum_a)), _mm_loadu_pd(&pid_control_V1_B.Product_m[0]));
+    _mm_storeu_pd(&pid_control_V1_B.wbe_b[0], tmp_3);
+
+    /* Sum: '<S306>/Sum3' incorporates:
      *  Constant: '<S306>/max_height_low'
      *  Product: '<S306>/Product1'
      *  Product: '<S310>/Product'
      *  Sum: '<S306>/Sum1'
      *  Sum: '<S306>/Sum2'
-     *  Sum: '<S306>/Sum3'
      */
-    pid_control_V1_B.Merge[2] = (pid_control_V1_B.w_d[1] -
+    pid_control_V1_B.wbe_b[2] = (pid_control_V1_B.w_d[1] -
       pid_control_V1_B.Sum1_g) * (pid_control_V1_B.Sum2_l - 1000.0) /
       pid_control_V1_ConstB.Sum_a + pid_control_V1_B.Sum1_g;
 
@@ -2568,6 +2581,34 @@ void pid_control_V1::step()
     break;
   }
 
+  if (tmp_0) {
+    /* MATLABSystem: '<S282>/SourceBlock' */
+    pid_control_V1_B.SourceBlock_o1_k = Sub_pid_control_V1_423.getLatestMessage(
+      &rtb_SourceBlock_o2_dd);
+
+    /* Outputs for Enabled SubSystem: '<S282>/Enabled Subsystem' */
+    pid_control_V1_EnabledSubsystem(pid_control_V1_B.SourceBlock_o1_k,
+      &rtb_SourceBlock_o2_dd, &pid_control_V1_B.EnabledSubsystem);
+
+    /* End of Outputs for SubSystem: '<S282>/Enabled Subsystem' */
+  }
+
+  /* Switch: '<S10>/Switch1' */
+  if (pid_control_V1_B.EnabledSubsystem.In1.data) {
+    /* Switch: '<S10>/Switch1' */
+    pid_control_V1_B.Switch1[0] = pid_control_V1_B.wbe_b[0];
+    pid_control_V1_B.Switch1[1] = pid_control_V1_B.wbe_b[1];
+    pid_control_V1_B.Switch1[2] = pid_control_V1_B.wbe_b[2];
+  } else {
+    /* Switch: '<S10>/Switch1' incorporates:
+     *  Constant: '<S10>/Constant2'
+     */
+    pid_control_V1_B.Switch1[0] = 0.0;
+    pid_control_V1_B.Switch1[1] = 0.0;
+    pid_control_V1_B.Switch1[2] = 0.0;
+  }
+
+  /* End of Switch: '<S10>/Switch1' */
   if (tmp_0) {
     /* MATLABSystem: '<S283>/SourceBlock' */
     pid_control_V1_B.SourceBlock_o1_c = Sub_pid_control_V1_443.getLatestMessage(
@@ -2646,42 +2687,7 @@ void pid_control_V1::step()
      *  RandomNumber: '<S277>/White Noise'
      */
     pid_control_V1_B.Output = 10.0 * pid_control_V1_DW.NextOutput_k;
-
-    /* MATLABSystem: '<S282>/SourceBlock' */
-    pid_control_V1_B.SourceBlock_o1_k = Sub_pid_control_V1_423.getLatestMessage(
-      &rtb_SourceBlock_o2_dd);
-
-    /* Outputs for Enabled SubSystem: '<S282>/Enabled Subsystem' */
-    pid_control_V1_EnabledSubsystem(pid_control_V1_B.SourceBlock_o1_k,
-      &rtb_SourceBlock_o2_dd, &pid_control_V1_B.EnabledSubsystem);
-
-    /* End of Outputs for SubSystem: '<S282>/Enabled Subsystem' */
-
-    /* MATLABSystem: '<S285>/SourceBlock' */
-    pid_control_V1_B.SourceBlock_o1_h = Sub_pid_control_V1_417.getLatestMessage(
-      &rtb_SourceBlock_o2_j);
-
-    /* Outputs for Enabled SubSystem: '<S285>/Enabled Subsystem' */
-    pid_control_V1_EnabledSubsystem(pid_control_V1_B.SourceBlock_o1_h,
-      &rtb_SourceBlock_o2_j, &pid_control_V1_B.EnabledSubsystem_pt);
-
-    /* End of Outputs for SubSystem: '<S285>/Enabled Subsystem' */
   }
-
-  /* Switch: '<S10>/Switch' incorporates:
-   *  Constant: '<S10>/Constant'
-   */
-  if (pid_control_V1_B.EnabledSubsystem_pt.In1.data) {
-    pid_control_V1_B.wbe_b[0] = pid_control_V1_B.UnitConversion[0];
-    pid_control_V1_B.wbe_b[1] = pid_control_V1_B.UnitConversion[1];
-    pid_control_V1_B.wbe_b[2] = pid_control_V1_B.UnitConversion[2];
-  } else {
-    pid_control_V1_B.wbe_b[0] = 0.0;
-    pid_control_V1_B.wbe_b[1] = 0.0;
-    pid_control_V1_B.wbe_b[2] = 0.0;
-  }
-
-  /* End of Switch: '<S10>/Switch' */
 
   /* TransferFcn: '<S10>/Transfer Fcn' */
   pid_control_V1_B.SignPreSat = 0.5303 * pid_control_V1_X.TransferFcn_CSTATE[0]
@@ -2697,28 +2703,13 @@ void pid_control_V1::step()
   /* End of Switch: '<S10>/Switch2' */
 
   /* Sum: '<S10>/Sum' */
-  pid_control_V1_B.Sum[0] = pid_control_V1_B.wbe_b[0];
-  pid_control_V1_B.Sum[1] = pid_control_V1_B.wbe_b[1] +
+  pid_control_V1_B.Sum[0] = pid_control_V1_B.Switch_p[0];
+  pid_control_V1_B.Sum[1] = pid_control_V1_B.Switch_p[1] +
     pid_control_V1_B.SignPreSat;
-  pid_control_V1_B.Sum[2] = pid_control_V1_B.wbe_b[2];
-
-  /* Switch: '<S10>/Switch1' incorporates:
-   *  Constant: '<S10>/Constant2'
-   */
-  if (pid_control_V1_B.EnabledSubsystem.In1.data) {
-    pid_control_V1_B.wbe_b[0] = pid_control_V1_B.Merge[0];
-    pid_control_V1_B.wbe_b[1] = pid_control_V1_B.Merge[1];
-    pid_control_V1_B.wbe_b[2] = pid_control_V1_B.Merge[2];
-  } else {
-    pid_control_V1_B.wbe_b[0] = 0.0;
-    pid_control_V1_B.wbe_b[1] = 0.0;
-    pid_control_V1_B.wbe_b[2] = 0.0;
-  }
-
-  /* End of Switch: '<S10>/Switch1' */
+  pid_control_V1_B.Sum[2] = pid_control_V1_B.Switch_p[2];
 
   /* Sum: '<S10>/Sum1' */
-  pid_control_V1_B.Sum1[0] = pid_control_V1_B.wbe_b[0];
+  pid_control_V1_B.Sum1[0] = pid_control_V1_B.Switch1[0];
 
   /* Switch: '<S10>/Switch3' incorporates:
    *  Constant: '<S10>/Constant4'
@@ -2734,8 +2725,8 @@ void pid_control_V1::step()
   /* Sum: '<S10>/Sum1' incorporates:
    *  Switch: '<S10>/Switch3'
    */
-  pid_control_V1_B.Sum1[1] = pid_control_V1_B.wbe_b[1] + pid_control_V1_B.w_r;
-  pid_control_V1_B.Sum1[2] = pid_control_V1_B.wbe_b[2];
+  pid_control_V1_B.Sum1[1] = pid_control_V1_B.Switch1[1] + pid_control_V1_B.w_r;
+  pid_control_V1_B.Sum1[2] = pid_control_V1_B.Switch1[2];
   if (rtmIsMajorTimeStep((&pid_control_V1_M))) {
     if (rtmIsMajorTimeStep((&pid_control_V1_M))) {
       /* Update for Memory: '<S10>/Memory2' incorporates:
@@ -3172,6 +3163,15 @@ void pid_control_V1::initialize()
   /* Start for If: '<S293>/if Height < Max low altitude  elseif Height > Min isotropic altitude ' */
   pid_control_V1_DW.ifHeightMaxlowaltitudeelseifHei = -1;
 
+  /* Start for MATLABSystem: '<S285>/SourceBlock' */
+  pid_control_V1_DW.obj_h.QOSAvoidROSNamespaceConventions = false;
+  pid_control_V1_DW.obj_h.matlabCodegenIsDeleted = false;
+  pid_control_V1_DW.objisempty_a = true;
+  pid_control_V1_DW.obj_h.isSetupComplete = false;
+  pid_control_V1_DW.obj_h.isInitialized = 1;
+  pid_co_Subscriber_setupImpl_onh(&pid_control_V1_DW.obj_h);
+  pid_control_V1_DW.obj_h.isSetupComplete = true;
+
   /* Start for Enabled SubSystem: '<S287>/Hpgw' */
   (void) memset(&(pid_control_V1_XDis.pgw_p_CSTATE), 1,
                 2*sizeof(boolean_T));
@@ -3193,6 +3193,15 @@ void pid_control_V1::initialize()
   /* Start for If: '<S292>/if Height < Max low altitude  elseif Height > Min isotropic altitude ' */
   pid_control_V1_DW.ifHeightMaxlowaltitudeelseifH_a = -1;
 
+  /* Start for MATLABSystem: '<S282>/SourceBlock' */
+  pid_control_V1_DW.obj_h4.QOSAvoidROSNamespaceConventions = false;
+  pid_control_V1_DW.obj_h4.matlabCodegenIsDeleted = false;
+  pid_control_V1_DW.objisempty_c = true;
+  pid_control_V1_DW.obj_h4.isSetupComplete = false;
+  pid_control_V1_DW.obj_h4.isInitialized = 1;
+  pid_contro_Subscriber_setupImpl(&pid_control_V1_DW.obj_h4);
+  pid_control_V1_DW.obj_h4.isSetupComplete = true;
+
   /* Start for MATLABSystem: '<S283>/SourceBlock' */
   pid_control_V1_DW.obj_hy.QOSAvoidROSNamespaceConventions = false;
   pid_control_V1_DW.obj_hy.matlabCodegenIsDeleted = false;
@@ -3210,24 +3219,6 @@ void pid_control_V1::initialize()
   pid_control_V1_DW.obj_p.isInitialized = 1;
   pid_con_Subscriber_setupImpl_on(&pid_control_V1_DW.obj_p);
   pid_control_V1_DW.obj_p.isSetupComplete = true;
-
-  /* Start for MATLABSystem: '<S282>/SourceBlock' */
-  pid_control_V1_DW.obj_h4.QOSAvoidROSNamespaceConventions = false;
-  pid_control_V1_DW.obj_h4.matlabCodegenIsDeleted = false;
-  pid_control_V1_DW.objisempty_c = true;
-  pid_control_V1_DW.obj_h4.isSetupComplete = false;
-  pid_control_V1_DW.obj_h4.isInitialized = 1;
-  pid_contro_Subscriber_setupImpl(&pid_control_V1_DW.obj_h4);
-  pid_control_V1_DW.obj_h4.isSetupComplete = true;
-
-  /* Start for MATLABSystem: '<S285>/SourceBlock' */
-  pid_control_V1_DW.obj_h.QOSAvoidROSNamespaceConventions = false;
-  pid_control_V1_DW.obj_h.matlabCodegenIsDeleted = false;
-  pid_control_V1_DW.objisempty_a = true;
-  pid_control_V1_DW.obj_h.isSetupComplete = false;
-  pid_control_V1_DW.obj_h.isInitialized = 1;
-  pid_co_Subscriber_setupImpl_onh(&pid_control_V1_DW.obj_h);
-  pid_control_V1_DW.obj_h.isSetupComplete = true;
   pid_control_V1_PrevZCX.Integrator_Reset_ZCE = UNINITIALIZED_ZCSIG;
 
   /* InitializeConditions for Memory: '<S10>/Memory2' */
@@ -3255,7 +3246,7 @@ void pid_control_V1::initialize()
   /* End of InitializeConditions for Integrator: '<S10>/Integrator' */
 
   /* InitializeConditions for UnitDelay: '<Root>/Unit Delay3' */
-  pid_control_V1_DW.UnitDelay3_DSTATE = 0.2;
+  pid_control_V1_DW.UnitDelay3_DSTATE = 0.8;
 
   /* InitializeConditions for Integrator: '<S101>/Integrator' */
   pid_control_V1_X.Integrator_CSTATE_n = 0.0;
@@ -3353,24 +3344,6 @@ void pid_control_V1::initialize()
 
   /* End of SystemInitialize for SubSystem: '<S288>/Hwgw(s)' */
 
-  /* SystemInitialize for Enabled SubSystem: '<S287>/Hpgw' */
-  /* InitializeConditions for Integrator: '<S298>/pgw_p' */
-  pid_control_V1_X.pgw_p_CSTATE[0] = 0.0;
-
-  /* End of SystemInitialize for SubSystem: '<S287>/Hpgw' */
-
-  /* SystemInitialize for Enabled SubSystem: '<S287>/Hqgw' */
-  /* InitializeConditions for Integrator: '<S299>/qgw_p' */
-  pid_control_V1_X.qgw_p_CSTATE[0] = 0.0;
-
-  /* End of SystemInitialize for SubSystem: '<S287>/Hqgw' */
-
-  /* SystemInitialize for Enabled SubSystem: '<S287>/Hrgw' */
-  /* InitializeConditions for Integrator: '<S300>/rgw_p' */
-  pid_control_V1_X.rgw_p_CSTATE[0] = 0.0;
-
-  /* End of SystemInitialize for SubSystem: '<S287>/Hrgw' */
-
   /* SystemInitialize for Enabled SubSystem: '<S288>/Hugw(s)' */
   /* InitializeConditions for Integrator: '<S301>/ug_p' */
   pid_control_V1_X.ug_p_CSTATE[1] = 0.0;
@@ -3395,6 +3368,29 @@ void pid_control_V1::initialize()
 
   /* End of SystemInitialize for SubSystem: '<S288>/Hwgw(s)' */
 
+  /* SystemInitialize for Enabled SubSystem: '<S285>/Enabled Subsystem' */
+  pid_contr_EnabledSubsystem_Init(&pid_control_V1_B.EnabledSubsystem_pt);
+
+  /* End of SystemInitialize for SubSystem: '<S285>/Enabled Subsystem' */
+
+  /* SystemInitialize for Enabled SubSystem: '<S287>/Hpgw' */
+  /* InitializeConditions for Integrator: '<S298>/pgw_p' */
+  pid_control_V1_X.pgw_p_CSTATE[0] = 0.0;
+
+  /* End of SystemInitialize for SubSystem: '<S287>/Hpgw' */
+
+  /* SystemInitialize for Enabled SubSystem: '<S287>/Hqgw' */
+  /* InitializeConditions for Integrator: '<S299>/qgw_p' */
+  pid_control_V1_X.qgw_p_CSTATE[0] = 0.0;
+
+  /* End of SystemInitialize for SubSystem: '<S287>/Hqgw' */
+
+  /* SystemInitialize for Enabled SubSystem: '<S287>/Hrgw' */
+  /* InitializeConditions for Integrator: '<S300>/rgw_p' */
+  pid_control_V1_X.rgw_p_CSTATE[0] = 0.0;
+
+  /* End of SystemInitialize for SubSystem: '<S287>/Hrgw' */
+
   /* SystemInitialize for Enabled SubSystem: '<S287>/Hpgw' */
   /* InitializeConditions for Integrator: '<S298>/pgw_p' */
   pid_control_V1_X.pgw_p_CSTATE[1] = 0.0;
@@ -3413,6 +3409,11 @@ void pid_control_V1::initialize()
 
   /* End of SystemInitialize for SubSystem: '<S287>/Hrgw' */
 
+  /* SystemInitialize for Enabled SubSystem: '<S282>/Enabled Subsystem' */
+  pid_contr_EnabledSubsystem_Init(&pid_control_V1_B.EnabledSubsystem);
+
+  /* End of SystemInitialize for SubSystem: '<S282>/Enabled Subsystem' */
+
   /* SystemInitialize for Enabled SubSystem: '<S283>/Enabled Subsystem' */
   pid_con_EnabledSubsystem_i_Init(&pid_control_V1_B.EnabledSubsystem_k);
 
@@ -3422,16 +3423,6 @@ void pid_control_V1::initialize()
   pid_con_EnabledSubsystem_i_Init(&pid_control_V1_B.EnabledSubsystem_p);
 
   /* End of SystemInitialize for SubSystem: '<S284>/Enabled Subsystem' */
-
-  /* SystemInitialize for Enabled SubSystem: '<S282>/Enabled Subsystem' */
-  pid_contr_EnabledSubsystem_Init(&pid_control_V1_B.EnabledSubsystem);
-
-  /* End of SystemInitialize for SubSystem: '<S282>/Enabled Subsystem' */
-
-  /* SystemInitialize for Enabled SubSystem: '<S285>/Enabled Subsystem' */
-  pid_contr_EnabledSubsystem_Init(&pid_control_V1_B.EnabledSubsystem_pt);
-
-  /* End of SystemInitialize for SubSystem: '<S285>/Enabled Subsystem' */
 
   /* set "at time zero" to false */
   if (rtmIsFirstInitCond((&pid_control_V1_M))) {
@@ -3477,6 +3468,28 @@ void pid_control_V1::terminate()
   /* End of Terminate for MATLABSystem: '<S2>/ServiceCaller' */
   /* End of Terminate for SubSystem: '<Root>/Call Service' */
 
+  /* Terminate for MATLABSystem: '<S285>/SourceBlock' */
+  if (!pid_control_V1_DW.obj_h.matlabCodegenIsDeleted) {
+    pid_control_V1_DW.obj_h.matlabCodegenIsDeleted = true;
+    if ((pid_control_V1_DW.obj_h.isInitialized == 1) &&
+        pid_control_V1_DW.obj_h.isSetupComplete) {
+      Sub_pid_control_V1_417.resetSubscriberPtr();//();
+    }
+  }
+
+  /* End of Terminate for MATLABSystem: '<S285>/SourceBlock' */
+
+  /* Terminate for MATLABSystem: '<S282>/SourceBlock' */
+  if (!pid_control_V1_DW.obj_h4.matlabCodegenIsDeleted) {
+    pid_control_V1_DW.obj_h4.matlabCodegenIsDeleted = true;
+    if ((pid_control_V1_DW.obj_h4.isInitialized == 1) &&
+        pid_control_V1_DW.obj_h4.isSetupComplete) {
+      Sub_pid_control_V1_423.resetSubscriberPtr();//();
+    }
+  }
+
+  /* End of Terminate for MATLABSystem: '<S282>/SourceBlock' */
+
   /* Terminate for MATLABSystem: '<S283>/SourceBlock' */
   if (!pid_control_V1_DW.obj_hy.matlabCodegenIsDeleted) {
     pid_control_V1_DW.obj_hy.matlabCodegenIsDeleted = true;
@@ -3498,27 +3511,6 @@ void pid_control_V1::terminate()
   }
 
   /* End of Terminate for MATLABSystem: '<S284>/SourceBlock' */
-  /* Terminate for MATLABSystem: '<S282>/SourceBlock' */
-  if (!pid_control_V1_DW.obj_h4.matlabCodegenIsDeleted) {
-    pid_control_V1_DW.obj_h4.matlabCodegenIsDeleted = true;
-    if ((pid_control_V1_DW.obj_h4.isInitialized == 1) &&
-        pid_control_V1_DW.obj_h4.isSetupComplete) {
-      Sub_pid_control_V1_423.resetSubscriberPtr();//();
-    }
-  }
-
-  /* End of Terminate for MATLABSystem: '<S282>/SourceBlock' */
-
-  /* Terminate for MATLABSystem: '<S285>/SourceBlock' */
-  if (!pid_control_V1_DW.obj_h.matlabCodegenIsDeleted) {
-    pid_control_V1_DW.obj_h.matlabCodegenIsDeleted = true;
-    if ((pid_control_V1_DW.obj_h.isInitialized == 1) &&
-        pid_control_V1_DW.obj_h.isSetupComplete) {
-      Sub_pid_control_V1_417.resetSubscriberPtr();//();
-    }
-  }
-
-  /* End of Terminate for MATLABSystem: '<S285>/SourceBlock' */
 }
 
 /* Constructor */

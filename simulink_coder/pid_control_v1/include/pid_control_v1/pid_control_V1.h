@@ -6,9 +6,9 @@
  *
  * Code generation for model "pid_control_V1".
  *
- * Model version              : 12.115
+ * Model version              : 12.123
  * Simulink Coder version : 25.2 (R2025b) 28-Jul-2025
- * C++ source code generated on : Fri Mar 27 23:21:18 2026
+ * C++ source code generated on : Sat Mar 28 20:25:43 2026
  *
  * Target selection: ert.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -202,14 +202,13 @@ struct B_pid_control_V1_T {
   char_T b_zeroDelimTopic_b[17];
   sJ4ih70VmKcvCeguWN0mNVF deadline;
   sJ4ih70VmKcvCeguWN0mNVF deadline_p;
+  real_T w_n[2];                       /* '<S301>/w' */
   real_T w1_c[2];                      /* '<S301>/w1' */
   real_T w_d[2];                       /* '<S300>/w' */
   real_T w_e0[2];                      /* '<S299>/w' */
   real_T UnaryMinus[2];                /* '<S299>/Unary Minus' */
   real_T w_o[2];                       /* '<S298>/w' */
   real_T sigma_w[2];                   /* '<S298>/sigma_w' */
-  uint8_T stringOut[128];              /* '<Root>/MATLAB Function1' */
-  uint8_T stringOut_l[128];            /* '<Root>/MATLAB Function' */
   real_T frac[2];
   real_T dv[2];
   real_T Switch3;                      /* '<Root>/Switch3' */
@@ -235,8 +234,8 @@ struct B_pid_control_V1_T {
   real_T IntegralGain;                 /* '<S202>/Integral Gain' */
   real_T Switch_j;                     /* '<S249>/Switch' */
   real_T Product[4];                   /* '<S297>/Product' */
-  real_T UnitConversion[3];            /* '<S279>/Unit Conversion' */
-  real_T Merge[3];                     /* '<S309>/Merge' */
+  real_T Switch_p[3];                  /* '<S10>/Switch' */
+  real_T Switch1[3];                   /* '<S10>/Switch1' */
   real_T data;
   real_T data_n;
   real_T Power;                        /* '<S10>/Product2' */
@@ -249,14 +248,14 @@ struct B_pid_control_V1_T {
   real_T Sum1[3];                      /* '<S10>/Sum1' */
   real_T XDOT[40];                     /* '<S10>/MATLAB Function - MODEL' */
   real_T CL_total;                     /* '<S10>/MATLAB Function - MODEL' */
-  real_T h_out;                        /* '<S10>/MATLAB Function - MODEL' */
+  real_T mu_Lw_out;                    /* '<S10>/MATLAB Function - MODEL' */
+  real_T mu_Dw_out;                    /* '<S10>/MATLAB Function - MODEL' */
   real_T w[2];                         /* '<S303>/w' */
   real_T w_a[2];                       /* '<S303>/w ' */
   real_T LwgV1[2];                     /* '<S303>/Lwg//V 1' */
   real_T w_g[2];                       /* '<S302>/w' */
   real_T w_e[2];                       /* '<S302>/w ' */
   real_T w1[2];                        /* '<S302>/w 1' */
-  real_T w_n[2];                       /* '<S301>/w' */
   real_T u2;
   real_T w_r;
   real_T Va;
@@ -265,8 +264,8 @@ struct B_pid_control_V1_T {
   real_T hw;
   real_T hh;
   real_T Q;
-  real_T CL_w_OGE;
   real_T CL_h_OGE;
+  real_T CL_w_IGE;
   real_T CD_iw_IGE;
   real_T CD_ih_IGE;
   real_T Dtot_c;
@@ -307,6 +306,8 @@ struct B_pid_control_V1_T {
   uint32_T bpIndex[2];
   uint32_T lengthOut;                  /* '<Root>/MATLAB Function1' */
   uint32_T lengthOut_e;                /* '<Root>/MATLAB Function' */
+  uint8_T stringOut[128];              /* '<Root>/MATLAB Function1' */
+  uint8_T stringOut_l[128];            /* '<Root>/MATLAB Function' */
   boolean_T Compare;                   /* '<S278>/Compare' */
   boolean_T AND3;                      /* '<S39>/AND3' */
   boolean_T Memory_a;                  /* '<S39>/Memory' */
@@ -774,13 +775,13 @@ class pid_control_V1
     *obj);
   void pid_con_ServiceCaller_setupImpl(const ros_slros2_internal_block_Ser_T
     *obj);
-  void pid_cont_Subscriber_setupImpl_o(const ros_slros2_internal_block_Sub_T
-    *obj);
-  void pid_con_Subscriber_setupImpl_on(const ros_slros2_internal_block_Sub_T
+  void pid_co_Subscriber_setupImpl_onh(const ros_slros2_internal_block_Sub_T
     *obj);
   void pid_contro_Subscriber_setupImpl(const ros_slros2_internal_block_Sub_T
     *obj);
-  void pid_co_Subscriber_setupImpl_onh(const ros_slros2_internal_block_Sub_T
+  void pid_cont_Subscriber_setupImpl_o(const ros_slros2_internal_block_Sub_T
+    *obj);
+  void pid_con_Subscriber_setupImpl_on(const ros_slros2_internal_block_Sub_T
     *obj);
 
   /* Global mass matrix */
