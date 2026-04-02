@@ -6,9 +6,9 @@
  *
  * Code generation for model "pid_control_V1".
  *
- * Model version              : 12.126
+ * Model version              : 12.128
  * Simulink Coder version : 25.2 (R2025b) 28-Jul-2025
- * C++ source code generated on : Mon Mar 30 00:02:41 2026
+ * C++ source code generated on : Wed Apr  1 23:28:40 2026
  *
  * Target selection: ert.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -187,12 +187,14 @@ struct B_pid_control_V1_T {
   SL_Bus_gazebo_msgs_SetEntityStateRequest BusAssignment;/* '<Root>/Bus Assignment' */
   real_T IC[12];                       /* '<S10>/IC' */
   real_T x[12];                        /* '<S10>/Integrator' */
+  real_T R[9];
   real_T RotationAnglestoDirectionCo[9];
                         /* '<S10>/Rotation Angles to Direction Cosine Matrix' */
-  real_T FA_b_tmp[9];
+  real_T dv[9];
   real_T TmpSignalConversionAtSFunct[5];/* '<S10>/MATLAB Function - MODEL' */
   char_T b_zeroDelimTopic[25];
   real_T wbe_b[3];
+  real_T FE1_b[3];
   real_T F_b[3];
   real_T Product_m[3];                 /* '<S319>/Product' */
   real_T Dtot[3];
@@ -203,6 +205,8 @@ struct B_pid_control_V1_T {
   sJ4ih70VmKcvCeguWN0mNVF deadline;
   sJ4ih70VmKcvCeguWN0mNVF deadline_p;
   sJ4ih70VmKcvCeguWN0mNVF deadline_c;
+  real_T LwgV1[2];                     /* '<S304>/Lwg//V 1' */
+  real_T w_g[2];                       /* '<S303>/w' */
   real_T w_e[2];                       /* '<S303>/w ' */
   real_T w1[2];                        /* '<S303>/w 1' */
   real_T w_n[2];                       /* '<S302>/w' */
@@ -212,10 +216,9 @@ struct B_pid_control_V1_T {
   real_T UnaryMinus[2];                /* '<S300>/Unary Minus' */
   real_T w_o[2];                       /* '<S299>/w' */
   real_T sigma_w[2];                   /* '<S299>/sigma_w' */
-  uint8_T stringOut[128];              /* '<Root>/MATLAB Function1' */
   uint8_T stringOut_l[128];            /* '<Root>/MATLAB Function' */
   real_T frac[2];
-  real_T dv[2];
+  real_T dv1[2];
   real_T Switch3;                      /* '<Root>/Switch3' */
   real_T Gain;                         /* '<Root>/Gain' */
   real_T FilterCoefficient;            /* '<S105>/Filter Coefficient' */
@@ -258,8 +261,6 @@ struct B_pid_control_V1_T {
   real_T mu_Dw_out;                    /* '<S10>/MATLAB Function - MODEL' */
   real_T w[2];                         /* '<S304>/w' */
   real_T w_a[2];                       /* '<S304>/w ' */
-  real_T LwgV1[2];                     /* '<S304>/Lwg//V 1' */
-  real_T w_g[2];                       /* '<S303>/w' */
   real_T u2;
   real_T w_r;
   real_T Va;
@@ -268,8 +269,8 @@ struct B_pid_control_V1_T {
   real_T hw;
   real_T hh;
   real_T Q;
-  real_T CL_h_OGE;
   real_T CL_w_IGE;
+  real_T CL_h_IGE;
   real_T CD_iw_IGE;
   real_T CD_ih_IGE;
   real_T Dtot_f;
@@ -277,10 +278,8 @@ struct B_pid_control_V1_T {
   real_T CQ;
   real_T Cl;
   real_T Vd1;
-  real_T Tp1;
-  real_T Tp2;
+  real_T Vd2;
   real_T c_phi;
-  real_T s_phi;
   real_T c_the;
   real_T s_the;
   real_T c_psi;
@@ -292,18 +291,17 @@ struct B_pid_control_V1_T {
   real_T Sum_hl;                       /* '<S163>/Sum' */
   real_T Sum5;                         /* '<Root>/Sum5' */
   real_T SignPreSat_h;                 /* '<S250>/SignPreSat' */
-  real_T FE1_b_idx_1;
-  real_T Mcg_b_idx_2;
+  real_T FE_b;
   real_T Mcg_b_idx_0;
   real_T FE2_b_idx_0;
   real_T FE2_b_idx_2;
   real_T Fg_b_idx_2;
-  real_T Fg_b_idx_1;
+  real_T FE_b_idx_0;
   real_T FA_b_idx_0;
   real_T FA_b_idx_1;
   real_T FA_b_idx_2;
-  real_T c_the_tmp;
-  real_T c_the_tmp_g;
+  real_T R_tmp;
+  real_T R_tmp_g;
   real_T Ltot_tmp;
   SL_Bus_std_msgs_Float64 SourceBlock_o2_k;/* '<S285>/SourceBlock' */
   SL_Bus_std_msgs_Float64 SourceBlock_o2_p;/* '<S284>/SourceBlock' */
@@ -311,6 +309,7 @@ struct B_pid_control_V1_T {
   uint32_T bpIndex[2];
   uint32_T lengthOut;                  /* '<Root>/MATLAB Function1' */
   uint32_T lengthOut_e;                /* '<Root>/MATLAB Function' */
+  uint8_T stringOut[128];              /* '<Root>/MATLAB Function1' */
   boolean_T Compare;                   /* '<S279>/Compare' */
   boolean_T AND3;                      /* '<S40>/AND3' */
   boolean_T Memory_a;                  /* '<S40>/Memory' */

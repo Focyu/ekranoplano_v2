@@ -1,31 +1,40 @@
-clear all 
-close all
-clc
-%% Initialization
-Cp = 0.57;% motor efficientcy factor
-Tp = 0.125e-03; % motor PWM switching frequency
-max_thrust_force_per_motor =  1.33;
+clear all; close all; clc;
 
-% Test 1
-tsim = 100;
+%% PARAMETROS GLOBALES DEL MODELO
+% Motor: 2204-2300KV | Hélice: APC 5x4.5" | 3S LiPo
+Cp_motor = 0.57;
+D_prop   = 0.1270;                       % CORREGIDO: 5" (era 3.5")
+rho      = 1.225;
+Sp_prop  = pi*(D_prop^2/4);
+km_motor = 25.0;
+% Thrust máximo por motor (u=1, Va=0): 0.5*rho*Sp*Cp*km*km
+Cp = Cp_motor;   % alias para el bloque Simulink
+D  = D_prop;     % alias para el bloque Simulink (si lo usa)
+Sp = pi*(D^2/4);
+km = km_motor;  
+max_thrust_force_per_motor = 0.5*rho*Sp_prop*Cp_motor*km_motor^2;
+fprintf('Thrust max por motor: %.3f N\n', max_thrust_force_per_motor);
+fprintf('Thrust max total:     %.3f N\n', 2*max_thrust_force_per_motor);
+
+%% CONDICIONES INICIALES
+tsim = 10;
 step = 0.01;
 x_nom = zeros(12,1);
-% 1. Velocidad inicial de crucero para sostener 1.2 kg
-x_nom(1) = 20.2;   % 'u' = 20.2 m/s (~73 km/h)
-x_nom(3) = 0;      % 'w' = 0 
 
-% 2. Ángulo de ataque de equilibrio
-x_nom(8) = 2.0 * (pi/180);  % Theta (Pitch)
+% Velocidad y ángulo de trimado calculado
+x_nom(1)  = 20.2;           % u [m/s] — velocidad crucero
+x_nom(3)  = 0;              % w [m/s]
+x_nom(8)  = 1.5*(pi/180);   % CORREGIDO: theta trimado (~1.5° con iw=1.5°)
+x_nom(10) = 0;              % x_NED
+x_nom(11) = 0;              % y_NED
+x_nom(12) = -0.550;         % z_NED (altura = 0.55 m)
 
-% 3. Posición inicial
-x_nom(10) = 0;     
-x_nom(11) = 0;     
-x_nom(12) = -0.55; % altura inicial z_NED
-
+% Throttle inicial: calculado para equilibrar drag
+% D_cruise ≈ 0.93 N (con CD_0=0.042), Tp_each ≈ 0.465 N
+% Con D_prop=5": throttle necesario ≈ 0.52
 u_nom = zeros(5,1);
-u_nom(2) = -6.0 * pi/180; % Compensación de elevador
-u_nom(4:5) = 0.80;        % Acelerador al 75% inicial (motores empujan más)
-
+u_nom(2)   = 0.0;   % Elevador neutro
+u_nom(4:5) = 0.52;  % CORREGIDO: era 0.80 (sobreempujaba), ahora equilibrado
 x0 = x_nom;
 
 %% PARAMETROS DE CONTROL PID (Para modelo de 1.2 kg)
@@ -37,7 +46,7 @@ Ki_u = 0.015;
 Kd_u = 0.005;   
 
 % 2. Lazo de Altura
-h_sp = 0.20;    % Setpoint de altura (5 cm)
+h_sp = 0.550;    % Setpoint de altura (5 cm)
 Kp_h = 2.0;    % Mismo Kp_h agresivo para errores milimétricos
 Ki_h = 0.25;
 Kd_h = 4.5;
@@ -59,9 +68,9 @@ Kd_yaw = -0.4;
 
 % 5. Lazo de Alerones (Roll)
 phi_sp = 0.0; 
-Kp_roll = -0.55;   
-Ki_roll = -0.020;  
-Kd_roll = -0.40;   
+Kp_roll = -1.2;   
+Ki_roll = -0.08;  
+Kd_roll = -0.5;   
 
 
 
