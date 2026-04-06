@@ -16,63 +16,138 @@ max_thrust_force_per_motor = 0.5*rho*Sp_prop*Cp_motor*km_motor^2;
 fprintf('Thrust max por motor: %.3f N\n', max_thrust_force_per_motor);
 fprintf('Thrust max total:     %.3f N\n', 2*max_thrust_force_per_motor);
 
-%% CONDICIONES INICIALES
+%% CONDICIONES INICIALES BASE
 tsim = 10;
 step = 0.01;
-x_nom = zeros(12,1);
 
-% Velocidad y ángulo de trimado calculado
-x_nom(1)  = 20.2;           % u [m/s] — velocidad crucero
-x_nom(3)  = 0;              % w [m/s]
-x_nom(8)  = 1.5*(pi/180);   % CORREGIDO: theta trimado (~1.5° con iw=1.5°)
-x_nom(10) = 0;              % x_NED
-x_nom(11) = 0;              % y_NED
-x_nom(12) = -0.550;         % z_NED (altura = 0.55 m)
+Va_cruise  = 20.2;          % [m/s] velocidad de crucero
+h_cruise   = 0.550;         % [m]   altura de crucero
+theta_eq   = 1.5*(pi/180);  % [rad] pitch de trimado (~1.5°)
 
-% Throttle inicial: calculado para equilibrar drag
-% D_cruise ≈ 0.93 N (con CD_0=0.042), Tp_each ≈ 0.465 N
-% Con D_prop=5": throttle necesario ≈ 0.52
-u_nom = zeros(5,1);
-u_nom(2)   = 0.0;   % Elevador neutro
-u_nom(4:5) = 0.52;  % CORREGIDO: era 0.80 (sobreempujaba), ahora equilibrado
+%% PUNTOS DE EQUILIBRIO — GAIN SCHEDULING
+% ------------------------------------------------------------------
+% Parámetros de giro calculados del modelo dinámico (escala 1:21.5)
+%   bw = 0.6977 m | Cn_r = -1.5 | Q_cruise = 0.5*rho*Va^2
+%   Yapt = 0.0834 m (brazo de palanca motor)
+% ------------------------------------------------------------------
+R_turn         = 160.0;              % [m]   radio mínimo operacional
+r_eq           = Va_cruise / R_turn; % [rad/s] = 0.1263 yaw rate de equilibrio
+delta_u_diff   = 0.025;              % fracción de throttle diferencial por motor
+
+fprintf('r_eq (yaw rate giro): %.4f rad/s  (%.2f deg/s)\n', r_eq, r_eq*180/pi);
+fprintf('R_turn: %.1f m\n', R_turn);
+
+% ── Estado nominal vuelo RECTO ─────────────────────────────────────
+x_nom_straight        = zeros(12,1);
+x_nom_straight(1)     = Va_cruise;      % u  [m/s]
+x_nom_straight(8)     = theta_eq;       % theta [rad]
+x_nom_straight(12)    = -h_cruise;      % z_NED [m]
+
+% ── Estado nominal giro a la DERECHA (r > 0 → horario en NED) ─────
+x_nom_right           = x_nom_straight;
+x_nom_right(6)        = +r_eq;          % r [rad/s]
+
+% ── Estado nominal giro a la IZQUIERDA (r < 0) ────────────────────
+x_nom_left            = x_nom_straight;
+x_nom_left(6)         = -r_eq;          % r [rad/s]
+
+% ── Control nominal base ───────────────────────────────────────────
+u_nom_straight        = zeros(5,1);
+u_nom_straight(2)     = 0.0;            % elevador neutro
+u_nom_straight(4:5)   = 0.52;           % throttle de crucero
+
+% Control nominal giro derecha: motor izquierdo (+) motor derecho (-)
+u_nom_right           = u_nom_straight;
+u_nom_right(4)        = 0.52 + delta_u_diff;
+u_nom_right(5)        = 0.52 - delta_u_diff;
+
+% Control nominal giro izquierda: motor izquierdo (-) motor derecho (+)
+u_nom_left            = u_nom_straight;
+u_nom_left(4)         = 0.52 - delta_u_diff;
+u_nom_left(5)         = 0.52 + delta_u_diff;
+
+%% SELECCIÓN DE MODO DE VUELO
+% ------------------------------------------------------------------
+% flight_mode: 0 = vuelo recto  |  1 = giro derecha  |  2 = giro izquierda
+% Cambiar este valor antes de simular o regenerar código con Simulink Coder
+% ------------------------------------------------------------------
+flight_mode = 0;
+
+switch flight_mode
+    case 1   % Giro derecha
+        x_nom = x_nom_right;
+        u_nom = u_nom_right;
+        fprintf('Modo: GIRO DERECHA  r_eq=+%.4f rad/s\n', r_eq);
+    case 2   % Giro izquierda
+        x_nom = x_nom_left;
+        u_nom = u_nom_left;
+        fprintf('Modo: GIRO IZQUIERDA  r_eq=-%.4f rad/s\n', r_eq);
+    otherwise % Vuelo recto (default)
+        x_nom = x_nom_straight;
+        u_nom = u_nom_straight;
+        fprintf('Modo: VUELO RECTO\n');
+end
+
 x0 = x_nom;
 
 %% PARAMETROS DE CONTROL PID (Para modelo de 1.2 kg)
+% ------------------------------------------------------------------
+% Ganancias base — Vuelo RECTO
+% ------------------------------------------------------------------
 
 % 1. Lazo de Velocidad
-u_sp = 20.2;    % Setpoint: Velocidad de crucero en m/s
-Kp_u = 0.08;    % Aumentado un poco por la mayor masa inercial
-Ki_u = 0.015;  
-Kd_u = 0.005;   
+u_sp   = Va_cruise;
+Kp_u   = 0.08;
+Ki_u   = 0.015;
+Kd_u   = 0.005;
 
 % 2. Lazo de Altura
-h_sp = 0.550;    % Setpoint de altura (5 cm)
-Kp_h = 2.0;    % Mismo Kp_h agresivo para errores milimétricos
-Ki_h = 0.25;
-Kd_h = 4.5;
+h_sp   = h_cruise;
+Kp_h   = 2.0;
+Ki_h   = 0.25;
+Kd_h   = 4.5;
 
-% Límite de seguridad
-theta_max =  5.0 * (pi/180); 
-theta_min = -3.0 * (pi/180); 
+% Límite de seguridad en pitch
+theta_max =  5.0 * (pi/180);
+theta_min = -3.0 * (pi/180);
 
 % 3. Lazo Interno de Elevador (Pitch)
-Kp_pitch = -0.50;   
-Ki_pitch = -0.03;  
-Kd_pitch = -0.3;   
+Kp_pitch = -0.50;
+Ki_pitch = -0.03;
+Kd_pitch = -0.3;
 
-% 4. Lazo de Timón (Yaw)
-psi_sp = 0 * (pi/180); 
-Kp_yaw = -0.40;   
-Ki_yaw = -0.005;  
-Kd_yaw = -0.4;   
+% 4. Lazo de Timón (Yaw) — ganancias base (vuelo recto)
+psi_sp   = 0 * (pi/180);
+Kp_yaw   = -0.40;
+Ki_yaw   = -0.005;
+Kd_yaw   = -0.4;
 
 % 5. Lazo de Alerones (Roll)
-phi_sp = 0.0; 
-Kp_roll = -1.2;   
-Ki_roll = -0.08;  
-Kd_roll = -0.5;   
+phi_sp   = 0.0;
+Kp_roll  = -1.2;
+Ki_roll  = -0.08;
+Kd_roll  = -0.5;
 
+% ------------------------------------------------------------------
+% Ganancias alternativas — Modo GIRO
+% Ajustadas para rastreo de referencia tipo rampa en yaw:
+%   - Kp menor: evita saturación del timón en el inicio del giro
+%   - Ki mayor: compensa el error de estado estacionario ante rampa
+%   - Kd menor: reduce oscilaciones al seguir la rampa de psi
+% ------------------------------------------------------------------
+Kp_yaw_turn = -0.35;
+Ki_yaw_turn = -0.015;
+Kd_yaw_turn = -0.20;
 
+% Aplicar ganancias según modo activo
+if flight_mode == 1 || flight_mode == 2
+    Kp_yaw = Kp_yaw_turn;
+    Ki_yaw = Ki_yaw_turn;
+    Kd_yaw = Kd_yaw_turn;
+    fprintf('Ganancias PID Yaw: modo GIRO aplicado\n');
+else
+    fprintf('Ganancias PID Yaw: modo RECTO aplicado\n');
+end
 
 %% Simulation
 sim = sim('pid_control_V1.slx');
@@ -243,13 +318,6 @@ LT = sim.Load_Torque;
 % grid on
 % sgtitle('Torque vector M_b')
 % % ----------------Aerodyn Coeff---------------------------------------------
-% CL_w_OGE = sim.CL_w_OGE;
-% CL_h_OGE = sim.CL_h_OGE;
-% CL_w_IGE = sim.CL_w_IGE;
-% CL_h_IGE = sim.CL_h_IGE;
-% CD_iw_IGE = sim.CD_iw_IGE;
-% CD_ih_IGE = sim.CD_ih_IGE;
-% 
 % figure
 % subplot(1,2,1)
 % plot(t,CL_w_OGE(:,1))
