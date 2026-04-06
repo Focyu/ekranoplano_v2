@@ -23,7 +23,7 @@ ros2 bag record -o vuelo_ekranoplano_2 /setpoint/yaw /gazebo/model_states
 
 cd /home/facyu/Documentos/ekranoplano_sim
 source /opt/ros/humble/setup.bash
-./timon_virtual-v2.py
+./timon_virtual-v3.py
 
 
 
