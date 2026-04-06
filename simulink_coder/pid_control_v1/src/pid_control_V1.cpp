@@ -6,9 +6,9 @@
  *
  * Code generation for model "pid_control_V1".
  *
- * Model version              : 12.128
+ * Model version              : 12.131
  * Simulink Coder version : 25.2 (R2025b) 28-Jul-2025
- * C++ source code generated on : Wed Apr  1 23:28:40 2026
+ * C++ source code generated on : Sun Apr  5 22:12:38 2026
  *
  * Target selection: ert.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -710,7 +710,7 @@ void pid_control_V1::step()
   /* End of Outputs for SubSystem: '<S288>/Hqgw' */
   /* End of Outputs for SubSystem: '<S288>/Hrgw' */
   if (tmp_0) {
-    /* MATLAB Function: '<S10>/MATLAB Function1' incorporates:
+    /* MATLAB Function: '<S10>/MATLAB Function-reset' incorporates:
      *  Memory: '<S10>/Memory2'
      */
     memcpy(&pid_control_V1_B.IC[0], &pid_control_V1_DW.Memory2_PreviousInput[0],

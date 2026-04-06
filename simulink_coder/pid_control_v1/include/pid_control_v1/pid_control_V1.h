@@ -6,9 +6,9 @@
  *
  * Code generation for model "pid_control_V1".
  *
- * Model version              : 12.128
+ * Model version              : 12.131
  * Simulink Coder version : 25.2 (R2025b) 28-Jul-2025
- * C++ source code generated on : Wed Apr  1 23:28:40 2026
+ * C++ source code generated on : Sun Apr  5 22:12:38 2026
  *
  * Target selection: ert.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -1124,7 +1124,7 @@ extern volatile boolean_T runModel;
  * '<S279>' : 'pid_control_V1/SUBSYSTEM_MODEL/Compare To Constant'
  * '<S280>' : 'pid_control_V1/SUBSYSTEM_MODEL/Dryden Wind Turbulence Model  (Continuous (-q +r))'
  * '<S281>' : 'pid_control_V1/SUBSYSTEM_MODEL/MATLAB Function - MODEL'
- * '<S282>' : 'pid_control_V1/SUBSYSTEM_MODEL/MATLAB Function1'
+ * '<S282>' : 'pid_control_V1/SUBSYSTEM_MODEL/MATLAB Function-reset'
  * '<S283>' : 'pid_control_V1/SUBSYSTEM_MODEL/Subscribe1_TURBULENCIA1'
  * '<S284>' : 'pid_control_V1/SUBSYSTEM_MODEL/Subscribe_HEAVE'
  * '<S285>' : 'pid_control_V1/SUBSYSTEM_MODEL/Subscribe_RATE'
