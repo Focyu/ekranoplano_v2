@@ -6,9 +6,9 @@
  *
  * Code generation for model "pid_control_V1".
  *
- * Model version              : 12.131
+ * Model version              : 12.139
  * Simulink Coder version : 25.2 (R2025b) 28-Jul-2025
- * C++ source code generated on : Sun Apr  5 22:12:38 2026
+ * C++ source code generated on : Mon Apr  6 11:59:06 2026
  *
  * Target selection: ert.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -22,17 +22,17 @@
 /* Invariant block signals (default storage) */
 const ConstB_pid_control_V1_T pid_control_V1_ConstB = {
   0.0
-  ,                                    /* '<S287>/Unit Conversion' */
+  ,                                    /* '<S289>/Unit Conversion' */
   3.280839895013123
-  ,                                    /* '<S297>/Unit Conversion' */
+  ,                                    /* '<S299>/Unit Conversion' */
   0.32808398950131235
-  ,                                    /* '<S306>/sigma_wg ' */
+  ,                                    /* '<S308>/sigma_wg ' */
   16.469816272965875
-  ,                                    /* '<S291>/Unit Conversion' */
+  ,                                    /* '<S293>/Unit Conversion' */
   1749.9999999999998
-  ,                                    /* '<S325>/Unit Conversion' */
+  ,                                    /* '<S327>/Unit Conversion' */
   0.0
-  ,                     /* '<S305>/PreLook-Up Index Search  (prob of exceed)' */
+  ,                     /* '<S307>/PreLook-Up Index Search  (prob of exceed)' */
 
   {
     1.7724538509055159,
@@ -40,9 +40,9 @@ const ConstB_pid_control_V1_T pid_control_V1_ConstB = {
     1.7724538509055159,
     1.7724538509055159
   }
-  ,                                    /* '<S298>/Sqrt' */
+  ,                                    /* '<S300>/Sqrt' */
   0.1
-  ,                                    /* '<S298>/Sqrt1' */
+  ,                                    /* '<S300>/Sqrt1' */
 
   {
     17.724538509055158,
@@ -50,41 +50,76 @@ const ConstB_pid_control_V1_T pid_control_V1_ConstB = {
     17.724538509055158,
     17.724538509055158
   }
-  ,                                    /* '<S298>/Divide' */
+  ,                                    /* '<S300>/Divide' */
   767.49108527198644
-  ,                                    /* '<S10>/Gain2' */
+  ,                                    /* '<S12>/Gain2' */
   1000.0
-  ,                                    /* '<S315>/Sum' */
+  ,                                    /* '<S317>/Sum' */
   1000.0
-  ,                                    /* '<S307>/Sum' */
+  ,                                    /* '<S309>/Sum' */
   1.7320508075688772
-  ,                                    /* '<S304>/sqrt' */
+  ,                                    /* '<S306>/sqrt' */
   0.047687123546522367
-  ,                                    /* '<S299>/w4' */
+  ,                                    /* '<S301>/w4' */
   0.60218997480471
-  ,                                    /* '<S299>/u^1//6' */
+  ,                                    /* '<S301>/u^1//6' */
   2U
-  /* '<S305>/PreLook-Up Index Search  (prob of exceed)' */
+  /* '<S307>/PreLook-Up Index Search  (prob of exceed)' */
 };
 
 /* Constant parameters (default storage) */
 const ConstP_pid_control_V1_T pid_control_V1_ConstP = {
+  /* Expression: [ 27.5550, -2.4169, -16.0849 ]
+   * Referenced by: '<Root>/IMU1'
+   */
+  { 27.555, -2.4169, -16.0849 },
+
+  /* Pooled Parameter (Expression: [ 0, 0, 0 ])
+   * Referenced by: '<Root>/IMU1'
+   */
+  { 0.0, 0.0, 0.0 },
+
+  /* Pooled Parameter (Expression: [ 100, 0, 0; 0, 100, 0; 0, 0, 100 ])
+   * Referenced by: '<Root>/IMU1'
+   */
+  { 100.0, 0.0, 0.0, 0.0, 100.0, 0.0, 0.0, 0.0, 100.0 },
+
+  /* Expression: [0.0004, 0.0004, 0.0004]
+   * Referenced by: '<Root>/IMU1'
+   */
+  { 0.0004, 0.0004, 0.0004 },
+
+  /* Pooled Parameter (Expression: [0.0001, 0.0001, 0.0001])
+   * Referenced by: '<Root>/IMU1'
+   */
+  { 0.0001, 0.0001, 0.0001 },
+
+  /* Pooled Parameter (Expression: fractalcoef().Denominator)
+   * Referenced by: '<Root>/IMU1'
+   */
+  { 1.0, -0.5 },
+
+  /* Expression: [0.00001, 0.00001, 0.00001]
+   * Referenced by: '<Root>/IMU1'
+   */
+  { 1.0E-5, 1.0E-5, 1.0E-5 },
+
   /* Pooled Parameter (Expression: x_nom)
    * Referenced by:
-   *   '<S10>/IC'
-   *   '<S10>/Memory2'
+   *   '<S12>/IC'
+   *   '<S12>/Memory2'
    */
   { 20.2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.026179938779914945, 0.0, 0.0, 0.0,
     -0.55 },
 
   /* Expression: h_vec
-   * Referenced by: '<S305>/PreLook-Up Index Search  (altitude)'
+   * Referenced by: '<S307>/PreLook-Up Index Search  (altitude)'
    */
   { 500.0, 1750.0, 3750.0, 7500.0, 15000.0, 25000.0, 35000.0, 45000.0, 55000.0,
     65000.0, 75000.0, 80000.0 },
 
   /* Expression: sigma_vec'
-   * Referenced by: '<S305>/Medium//High Altitude Intensity'
+   * Referenced by: '<S307>/Medium//High Altitude Intensity'
    */
   { 3.2, 2.2, 1.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 4.2, 3.6, 3.3,
     1.6, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 6.6, 6.9, 7.4, 6.7, 4.6, 2.7,
@@ -94,7 +129,7 @@ const ConstP_pid_control_V1_T pid_control_V1_ConstP = {
     18.7, 21.5, 28.4, 30.2, 30.7, 31.0, 25.2, 23.1, 17.5, 10.7, 8.4, 7.2 },
 
   /* Computed Parameter: MediumHighAltitudeIntensity_max
-   * Referenced by: '<S305>/Medium//High Altitude Intensity'
+   * Referenced by: '<S307>/Medium//High Altitude Intensity'
    */
   { 11U, 6U }
 };
