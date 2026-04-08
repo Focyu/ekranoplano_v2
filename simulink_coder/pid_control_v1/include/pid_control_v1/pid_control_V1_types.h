@@ -6,9 +6,9 @@
  *
  * Code generation for model "pid_control_V1".
  *
- * Model version              : 12.139
+ * Model version              : 12.144
  * Simulink Coder version : 25.2 (R2025b) 28-Jul-2025
- * C++ source code generated on : Mon Apr  6 11:59:06 2026
+ * C++ source code generated on : Tue Apr  7 19:58:31 2026
  *
  * Target selection: ert.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -115,6 +115,16 @@ struct SL_Bus_gazebo_msgs_SetEntityStateRequest
 
 #endif
 
+#ifndef DEFINED_TYPEDEF_FOR_SL_Bus_std_msgs_Float64_
+#define DEFINED_TYPEDEF_FOR_SL_Bus_std_msgs_Float64_
+
+struct SL_Bus_std_msgs_Float64
+{
+  real_T data;
+};
+
+#endif
+
 #ifndef DEFINED_TYPEDEF_FOR_SL_Bus_gazebo_msgs_SetEntityStateResponse_
 #define DEFINED_TYPEDEF_FOR_SL_Bus_gazebo_msgs_SetEntityStateResponse_
 
@@ -131,16 +141,6 @@ struct SL_Bus_gazebo_msgs_SetEntityStateResponse
 struct SL_Bus_std_msgs_Bool
 {
   boolean_T data;
-};
-
-#endif
-
-#ifndef DEFINED_TYPEDEF_FOR_SL_Bus_std_msgs_Float64_
-#define DEFINED_TYPEDEF_FOR_SL_Bus_std_msgs_Float64_
-
-struct SL_Bus_std_msgs_Float64
-{
-  real_T data;
 };
 
 #endif
@@ -178,6 +178,19 @@ struct robotics_slcore_internal_bloc_T
 };
 
 #endif                              /* struct_robotics_slcore_internal_bloc_T */
+
+#ifndef struct_ros_slros2_internal_block_Pub_T
+#define struct_ros_slros2_internal_block_Pub_T
+
+struct ros_slros2_internal_block_Pub_T
+{
+  boolean_T matlabCodegenIsDeleted;
+  int32_T isInitialized;
+  boolean_T isSetupComplete;
+  boolean_T QOSAvoidROSNamespaceConventions;
+};
+
+#endif                              /* struct_ros_slros2_internal_block_Pub_T */
 
 #ifndef struct_ros_slros2_internal_block_Sub_T
 #define struct_ros_slros2_internal_block_Sub_T

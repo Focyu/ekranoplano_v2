@@ -4,7 +4,7 @@
  * Code generation for Simulink model "pid_control_V1".
  *
  * Simulink Coder version                : 25.2 (R2025b) 28-Jul-2025
- * C++ source code generated on : Mon Apr  6 11:59:06 2026
+ * C++ source code generated on : Tue Apr  7 19:58:31 2026
  *
  * Note that the generated code is not dependent on this header file.
  * The file is used in cojuction with the automatic build procedure.

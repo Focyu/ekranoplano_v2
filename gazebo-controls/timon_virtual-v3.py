@@ -7,21 +7,19 @@ import math
 import time
 import random
 
-# Duración de la rampa de transición entre estados de mar (segundos)
 RAMP_DURATION = 3.0
-# Cada cuántos segundos cambia el estado de mar
 INTERVAL = 15.0
 
 # ── Parámetros de giro coordinado ──────────────────────────────────────────
-BANK_POR_YAW   = 10.0 / 15.0   # 10° de bank para 15° de timón
-ROLL_MAX_ABS   = 15.0           # [deg]
-KFF_ALTURA     = 0.5
-ALT_MIN        = 0.10           # [m]
+BANK_POR_YAW   = 6.0 / 15.0
+ROLL_MAX_ABS   = 15.0
+KFF_ALTURA     = 0.10
+ALT_MIN        = 0.10
 
 # ── Parámetros del resorte de yaw ──────────────────────────────────────────
-YAW_STEP       = 5.0            # grados que suma/resta cada pulsación
-YAW_MAX        = 30.0           # límite absoluto del acumulador
-YAW_HOLD_TIME  = 1.0            # segundos que dura el setpoint tras cada pulsación
+YAW_STEP       = 3.0
+YAW_MAX        = 120.0
+YAW_HOLD_TIME  = 1.0
 
 
 class VirtualRudder(Node):
@@ -40,6 +38,10 @@ class VirtualRudder(Node):
         self.h_actual = 1.0
         self.create_subscription(Float64, '/estado/altura', self._cb_altura, 10)
 
+        # ── NUEVO: subscriber al heading actual ──────────────────────────────
+        self.psi_actual = 0.0
+        self.create_subscription(Float64, '/estado/yaw', self._cb_yaw, 10)
+
         # --- Estado de vuelo ---
         self.alt_m         = 1.0
         self.pitch_deg     = 0.0
@@ -50,10 +52,10 @@ class VirtualRudder(Node):
         self.step_deg = 0.10
 
         # --- Estado del resorte de yaw ---
-        self.yaw_acum       = 0.0   # acumulador (persiste entre pulsaciones)
-        self.yaw_active     = 0.0   # setpoint activo enviado al PID
-        self.roll_active    = 0.0   # roll coordinado con yaw_active
-        self.yaw_hold_until = 0.0   # timestamp de expiración del resorte
+        self.yaw_acum       = 0.0
+        self.yaw_active     = 0.0
+        self.roll_active    = 0.0
+        self.yaw_hold_until = 0.0
 
         # --- Olas ---
         self.A_min, self.A_max = 0.10, 0.25
@@ -71,9 +73,13 @@ class VirtualRudder(Node):
     def _cb_altura(self, msg):
         self.h_actual = max(ALT_MIN, msg.data)
 
+    # ── NUEVO: Callback heading actual ───────────────────────────────────────
+    def _cb_yaw(self, msg):
+        self.psi_actual = math.degrees(msg.data)
+
     # ── Roll máximo según altura ─────────────────────────────────────────────
     def _roll_max(self):
-        roll_por_h = 8.0 + self.h_actual * 3.5
+        roll_por_h = 8.0 + self.h_actual * 5.5
         return min(roll_por_h, ROLL_MAX_ABS)
 
     # ── Roll coordinado ──────────────────────────────────────────────────────
@@ -90,18 +96,18 @@ class VirtualRudder(Node):
 
     # ── Lógica del resorte ───────────────────────────────────────────────────
     def _pulsar_yaw(self, direccion):
-        """Suma/resta YAW_STEP al acumulador y activa el hold de 1 segundo."""
         self.yaw_acum = max(-YAW_MAX,
                         min( YAW_MAX,
                              self.yaw_acum + direccion * YAW_STEP))
-        self.yaw_active     = self.yaw_acum
+        # CAMBIO: setpoint absoluto = heading actual + delta acumulado
+        self.yaw_active     = self.psi_actual + self.yaw_acum
         self.roll_active    = self._calcular_roll(self.yaw_acum)
         self.yaw_hold_until = time.time() + YAW_HOLD_TIME
 
     def _actualizar_resorte(self, now):
-        """Cuando el hold expira, el yaw vuelve a 0 pero el acumulador queda."""
         if now >= self.yaw_hold_until:
-            self.yaw_active  = 0.0
+            # CAMBIO: mantiene heading absoluto alcanzado, cancela solo el roll
+            self.yaw_active  = self.psi_actual + self.yaw_acum
             self.roll_active = 0.0
 
     # ── Olas ─────────────────────────────────────────────────────────────────
@@ -170,7 +176,7 @@ def main(stdscr):
     stdscr.keypad(True)
 
     last_publish_time = time.time()
-    publish_interval  = 0.1   # 10 Hz
+    publish_interval  = 0.1
 
     try:
         while rclpy.ok():
@@ -180,7 +186,6 @@ def main(stdscr):
             if c != -1:
                 if c == curses.KEY_LEFT:
                     node._pulsar_yaw(-1)
-
                 elif c == curses.KEY_RIGHT:
                     node._pulsar_yaw(+1)
 
@@ -191,9 +196,9 @@ def main(stdscr):
 
                 elif c == ord(' '):
                     node.pitch_deg      = 0.0
-                    # [SPC] también resetea el acumulador de yaw
                     node.yaw_acum       = 0.0
-                    node.yaw_active     = 0.0
+                    # CAMBIO: mantiene heading actual al resetear, no va a 0
+                    node.yaw_active     = node.psi_actual
                     node.roll_active    = 0.0
                     node.yaw_hold_until = 0.0
 
@@ -210,7 +215,6 @@ def main(stdscr):
                 node.alt_m     = max(ALT_MIN, round(node.alt_m, 2))
                 node.pitch_deg = round(node.pitch_deg, 2)
 
-            # Actualizar resorte en cada ciclo (no solo al pulsar)
             node._actualizar_resorte(now)
 
             if (now - last_publish_time >= publish_interval) or (c != -1):
@@ -238,7 +242,8 @@ def main(stdscr):
             stdscr.addstr(6, 0, f"Pitch      : {node.pitch_deg:.2f} deg")
             stdscr.addstr(7, 0, f"Yaw SP     : {node.yaw_active:+.1f} deg  {resorte_barra}")
             stdscr.addstr(8, 0, f"Yaw acum   : {node.yaw_acum:+.1f} deg  (±{YAW_MAX:.0f}° max, paso {YAW_STEP:.0f}°/pulso)")
-            stdscr.addstr(9, 0, f"Roll       : {node.roll_active:.2f} deg  (lim ±{roll_lim:.1f}°  @h={node.h_actual:.2f}m)")
+            stdscr.addstr(9, 0, f"Psi actual : {node.psi_actual:+.1f} deg")
+            stdscr.addstr(10, 0, f"Roll       : {node.roll_active:.2f} deg  (lim ±{roll_lim:.1f}°  @h={node.h_actual:.2f}m)")
 
             turb_txt = "ON" if node.turb_enabled else "OFF"
             if node.ocean_enabled:
@@ -247,9 +252,9 @@ def main(stdscr):
             else:
                 ocean_txt = "OFF"
 
-            stdscr.addstr(11, 0, "--- PERTURBACIONES ---")
-            stdscr.addstr(12, 0, f"Turbulencia: {turb_txt}")
-            stdscr.addstr(13, 0, f"Oceano     : {ocean_txt}")
+            stdscr.addstr(12, 0, "--- PERTURBACIONES ---")
+            stdscr.addstr(13, 0, f"Turbulencia: {turb_txt}")
+            stdscr.addstr(14, 0, f"Oceano     : {ocean_txt}")
 
             stdscr.refresh()
 
