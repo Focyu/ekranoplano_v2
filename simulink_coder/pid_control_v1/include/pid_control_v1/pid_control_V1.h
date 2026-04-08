@@ -6,9 +6,9 @@
  *
  * Code generation for model "pid_control_V1".
  *
- * Model version              : 12.144
+ * Model version              : 12.145
  * Simulink Coder version : 25.2 (R2025b) 28-Jul-2025
- * C++ source code generated on : Tue Apr  7 19:58:31 2026
+ * C++ source code generated on : Wed Apr  8 10:35:43 2026
  *
  * Target selection: ert.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -202,8 +202,6 @@ struct B_pid_control_V1_T {
   real_T TmpSignalConversionAtSFunct[5];/* '<S14>/MATLAB Function - MODEL' */
   real_T q[4];                         /* '<Root>/MATLAB Function3' */
   char_T b_zeroDelimTopic[25];
-  real_T Memory[3];                    /* '<S14>/Memory' */
-  real_T Memory1[3];                   /* '<S14>/Memory1' */
   real_T FA_b[3];
   real_T FE1_b[3];
   real_T F_b[3];
@@ -254,6 +252,7 @@ struct B_pid_control_V1_T {
   sJ4ih70VmKcvCeguWN0mNVF deadline_g;
   sJ4ih70VmKcvCeguWN0mNVF deadline_ld;
   sJ4ih70VmKcvCeguWN0mNVF deadline_dh;
+  real_T w_n[2];                       /* '<S306>/w' */
   real_T w1_c[2];                      /* '<S306>/w1' */
   real_T w_d[2];                       /* '<S305>/w' */
   real_T w_e0[2];                      /* '<S304>/w' */
@@ -275,32 +274,35 @@ struct B_pid_control_V1_T {
   boolean_T flag[12];
   char_T obj1_Value[12];
   boolean_T flag_n[11];
+  real_T Gain3;                        /* '<Root>/Gain3' */
+  real_T Gain4;                        /* '<Root>/Gain4' */
   real_T Switch3;                      /* '<Root>/Switch3' */
   real_T Gain;                         /* '<Root>/Gain' */
   real_T FilterCoefficient;            /* '<S109>/Filter Coefficient' */
   real_T Saturation;                   /* '<S113>/Saturation' */
-  real_T Switch1;                      /* '<Root>/Switch1' */
   real_T FilterCoefficient_c;          /* '<S57>/Filter Coefficient' */
   real_T Saturation_k;                 /* '<S61>/Saturation' */
   real_T Saturation_i;                 /* '<Root>/Saturation' */
   real_T RateLimiter;                  /* '<Root>/Rate Limiter' */
   real_T FilterCoefficient_m;          /* '<S161>/Filter Coefficient' */
-  real_T Saturation_f;                 /* '<S165>/Saturation' */
+  real_T Sum6;                         /* '<Root>/Sum6' */
   real_T FilterCoefficient_p;          /* '<S213>/Filter Coefficient' */
   real_T Saturation_m;                 /* '<S217>/Saturation' */
   real_T FilterCoefficient_cv;         /* '<S267>/Filter Coefficient' */
   real_T Saturation_o;                 /* '<S271>/Saturation' */
+  real_T Memory[3];                    /* '<S14>/Memory' */
+  real_T Memory1[3];                   /* '<S14>/Memory1' */
   real_T Switch;                       /* '<S44>/Switch' */
   real_T SumI4;                        /* '<S98>/SumI4' */
   real_T SumI4_i;                      /* '<S150>/SumI4' */
   real_T Switch_j;                     /* '<S254>/Switch' */
   real_T Product[4];                   /* '<S302>/Product' */
   real_T Switch_p[3];                  /* '<S14>/Switch' */
-  real_T Switch1_p[3];                 /* '<S14>/Switch1' */
+  real_T Switch1[3];                   /* '<S14>/Switch1' */
   real_T data;
   real_T data_n;
   real_T Power;                        /* '<S14>/Product2' */
-  real_T Gain3;                        /* '<S14>/Gain3' */
+  real_T Gain3_f;                      /* '<S14>/Gain3' */
   real_T EnergykWh;                    /* '<S14>/Gain1' */
   real_T powerdemand;                  /* '<S14>/Divide' */
   real_T loadtorque;                   /* '<S14>/Divide1' */
@@ -319,10 +321,9 @@ struct B_pid_control_V1_T {
   real_T w_g[2];                       /* '<S307>/w' */
   real_T w_e[2];                       /* '<S307>/w ' */
   real_T w1[2];                        /* '<S307>/w 1' */
-  real_T w_n[2];                       /* '<S306>/w' */
   real_T roll_sp;                      /* '<Root>/MATLAB Function2' */
   real_T yaw_rate_sp;                  /* '<Root>/MATLAB Function2' */
-  uint8_T stringOut[128];              /* '<Root>/MATLAB Function1' */
+  real_T pitch_ff;                     /* '<Root>/MATLAB Function2' */
   uint8_T stringOut_l[128];            /* '<Root>/MATLAB Function' */
   real_T cy;
   real_T sy;
@@ -333,6 +334,7 @@ struct B_pid_control_V1_T {
   real_T phi_coordinated;
   real_T phi_lim;
   real_T u2;
+  real_T beta;
   real_T q_aero;
   real_T hw;
   real_T hh;
@@ -382,11 +384,11 @@ struct B_pid_control_V1_T {
   real_T varargin_2_j;
   real_T x_idx_5_f;
   SL_Bus_std_msgs_Float64 BusAssignment1;/* '<Root>/Bus Assignment1' */
+  SL_Bus_std_msgs_Float64 SourceBlock_o2_o;/* '<S16>/SourceBlock' */
   SL_Bus_std_msgs_Float64 SourceBlock_o2_k;/* '<S289>/SourceBlock' */
   SL_Bus_std_msgs_Float64 SourceBlock_o2_p;/* '<S288>/SourceBlock' */
-  SL_Bus_std_msgs_Float64 SourceBlock_o2_d;/* '<S15>/SourceBlock' */
-  SL_Bus_std_msgs_Float64 SourceBlock_o2_o;/* '<S16>/SourceBlock' */
   SL_Bus_std_msgs_Float64 SourceBlock_o2;/* '<S17>/SourceBlock' */
+  SL_Bus_std_msgs_Float64 SourceBlock_o2_d;/* '<S15>/SourceBlock' */
   uint32_T bpIndex[2];
   uint32_T u32[2];
   uint32_T b_u[2];
@@ -408,6 +410,7 @@ struct B_pid_control_V1_T {
   int32_T b_j;
   uint32_T lengthOut;                  /* '<Root>/MATLAB Function1' */
   uint32_T lengthOut_e;                /* '<Root>/MATLAB Function' */
+  uint8_T stringOut[128];              /* '<Root>/MATLAB Function1' */
   uint32_T i_o;
   uint32_T u_idx_0;
   uint32_T u_idx_1;
@@ -466,7 +469,6 @@ struct DW_pid_control_V1_T {
   real_T UnitDelay_DSTATE;             /* '<Root>/Unit Delay' */
   real_T UnitDelay5_DSTATE;            /* '<Root>/Unit Delay5' */
   real_T UnitDelay6_DSTATE;            /* '<Root>/Unit Delay6' */
-  real_T UnitDelay1_DSTATE;            /* '<Root>/Unit Delay1' */
   real_T Memory2_PreviousInput[12];    /* '<S14>/Memory2' */
   real_T PrevY;                        /* '<Root>/Rate Limiter' */
   real_T LastMajorTime;                /* '<Root>/Rate Limiter' */
@@ -965,8 +967,6 @@ class pid_control_V1
     *obj);
   void pid_Subscriber_setupImpl_onhgd0(const ros_slros2_internal_block_Sub_T
     *obj);
-  void pid__Subscriber_setupImpl_onhgd(const ros_slros2_internal_block_Sub_T
-    *obj);
   void pid_con_ServiceCaller_setupImpl(const ros_slros2_internal_block_Ser_T
     *obj);
   void pid_co_Subscriber_setupImpl_onh(const ros_slros2_internal_block_Sub_T
@@ -976,6 +976,8 @@ class pid_control_V1
   void pid_cont_Subscriber_setupImpl_o(const ros_slros2_internal_block_Sub_T
     *obj);
   void pid_con_Subscriber_setupImpl_on(const ros_slros2_internal_block_Sub_T
+    *obj);
+  void pid__Subscriber_setupImpl_onhgd(const ros_slros2_internal_block_Sub_T
     *obj);
   void pid_con_IMUSensorBase_resetImpl(fusion_simulink_imuSensor_pid_T *obj);
   boolean_T pid_control_V1_isequal_o(const real_T varargin_1[3], const real_T
@@ -1022,8 +1024,10 @@ extern volatile boolean_T runModel;
  * These blocks were eliminated from the model due to optimizations:
  *
  * Block '<Root>/Display' : Unused code path elimination
+ * Block '<Root>/Rate Transition' : Unused code path elimination
+ * Block '<Root>/Switch1' : Unused code path elimination
+ * Block '<Root>/Unit Delay1' : Unused code path elimination
  * Block '<S150>/Kb' : Eliminated nontunable gain of 1
- * Block '<Root>/Rate Transition' : Eliminated since input and output rates are identical
  * Block '<Root>/Rate Transition1' : Eliminated since input and output rates are identical
  * Block '<Root>/Rate Transition2' : Eliminated since input and output rates are identical
  * Block '<Root>/Rate Transition3' : Eliminated since input and output rates are identical
@@ -1068,7 +1072,7 @@ extern volatile boolean_T runModel;
  * '<S7>'   : 'pid_control_V1/MATLAB Function3'
  * '<S8>'   : 'pid_control_V1/PID ALERON'
  * '<S9>'   : 'pid_control_V1/PID ALTURA'
- * '<S10>'  : 'pid_control_V1/PID PITCH//ELEVATOR'
+ * '<S10>'  : 'pid_control_V1/PID ELEVATOR'
  * '<S11>'  : 'pid_control_V1/PID TIIMON'
  * '<S12>'  : 'pid_control_V1/PID VELOCIDAD'
  * '<S13>'  : 'pid_control_V1/Publish'
@@ -1182,58 +1186,58 @@ extern volatile boolean_T runModel;
  * '<S121>' : 'pid_control_V1/PID ALTURA/postSat Signal/Forward_Path'
  * '<S122>' : 'pid_control_V1/PID ALTURA/preInt Signal/Internal PreInt'
  * '<S123>' : 'pid_control_V1/PID ALTURA/preSat Signal/Forward_Path'
- * '<S124>' : 'pid_control_V1/PID PITCH//ELEVATOR/Anti-windup'
- * '<S125>' : 'pid_control_V1/PID PITCH//ELEVATOR/D Gain'
- * '<S126>' : 'pid_control_V1/PID PITCH//ELEVATOR/External Derivative'
- * '<S127>' : 'pid_control_V1/PID PITCH//ELEVATOR/Filter'
- * '<S128>' : 'pid_control_V1/PID PITCH//ELEVATOR/Filter ICs'
- * '<S129>' : 'pid_control_V1/PID PITCH//ELEVATOR/I Gain'
- * '<S130>' : 'pid_control_V1/PID PITCH//ELEVATOR/Ideal P Gain'
- * '<S131>' : 'pid_control_V1/PID PITCH//ELEVATOR/Ideal P Gain Fdbk'
- * '<S132>' : 'pid_control_V1/PID PITCH//ELEVATOR/Integrator'
- * '<S133>' : 'pid_control_V1/PID PITCH//ELEVATOR/Integrator ICs'
- * '<S134>' : 'pid_control_V1/PID PITCH//ELEVATOR/N Copy'
- * '<S135>' : 'pid_control_V1/PID PITCH//ELEVATOR/N Gain'
- * '<S136>' : 'pid_control_V1/PID PITCH//ELEVATOR/P Copy'
- * '<S137>' : 'pid_control_V1/PID PITCH//ELEVATOR/Parallel P Gain'
- * '<S138>' : 'pid_control_V1/PID PITCH//ELEVATOR/Reset Signal'
- * '<S139>' : 'pid_control_V1/PID PITCH//ELEVATOR/Saturation'
- * '<S140>' : 'pid_control_V1/PID PITCH//ELEVATOR/Saturation Fdbk'
- * '<S141>' : 'pid_control_V1/PID PITCH//ELEVATOR/Sum'
- * '<S142>' : 'pid_control_V1/PID PITCH//ELEVATOR/Sum Fdbk'
- * '<S143>' : 'pid_control_V1/PID PITCH//ELEVATOR/Tracking Mode'
- * '<S144>' : 'pid_control_V1/PID PITCH//ELEVATOR/Tracking Mode Sum'
- * '<S145>' : 'pid_control_V1/PID PITCH//ELEVATOR/Tsamp - Integral'
- * '<S146>' : 'pid_control_V1/PID PITCH//ELEVATOR/Tsamp - Ngain'
- * '<S147>' : 'pid_control_V1/PID PITCH//ELEVATOR/postSat Signal'
- * '<S148>' : 'pid_control_V1/PID PITCH//ELEVATOR/preInt Signal'
- * '<S149>' : 'pid_control_V1/PID PITCH//ELEVATOR/preSat Signal'
- * '<S150>' : 'pid_control_V1/PID PITCH//ELEVATOR/Anti-windup/Back Calculation'
- * '<S151>' : 'pid_control_V1/PID PITCH//ELEVATOR/D Gain/Internal Parameters'
- * '<S152>' : 'pid_control_V1/PID PITCH//ELEVATOR/External Derivative/Error'
- * '<S153>' : 'pid_control_V1/PID PITCH//ELEVATOR/Filter/Cont. Filter'
- * '<S154>' : 'pid_control_V1/PID PITCH//ELEVATOR/Filter ICs/Internal IC - Filter'
- * '<S155>' : 'pid_control_V1/PID PITCH//ELEVATOR/I Gain/Internal Parameters'
- * '<S156>' : 'pid_control_V1/PID PITCH//ELEVATOR/Ideal P Gain/Passthrough'
- * '<S157>' : 'pid_control_V1/PID PITCH//ELEVATOR/Ideal P Gain Fdbk/Disabled'
- * '<S158>' : 'pid_control_V1/PID PITCH//ELEVATOR/Integrator/Continuous'
- * '<S159>' : 'pid_control_V1/PID PITCH//ELEVATOR/Integrator ICs/Internal IC'
- * '<S160>' : 'pid_control_V1/PID PITCH//ELEVATOR/N Copy/Disabled'
- * '<S161>' : 'pid_control_V1/PID PITCH//ELEVATOR/N Gain/Internal Parameters'
- * '<S162>' : 'pid_control_V1/PID PITCH//ELEVATOR/P Copy/Disabled'
- * '<S163>' : 'pid_control_V1/PID PITCH//ELEVATOR/Parallel P Gain/Internal Parameters'
- * '<S164>' : 'pid_control_V1/PID PITCH//ELEVATOR/Reset Signal/Disabled'
- * '<S165>' : 'pid_control_V1/PID PITCH//ELEVATOR/Saturation/Enabled'
- * '<S166>' : 'pid_control_V1/PID PITCH//ELEVATOR/Saturation Fdbk/Disabled'
- * '<S167>' : 'pid_control_V1/PID PITCH//ELEVATOR/Sum/Sum_PID'
- * '<S168>' : 'pid_control_V1/PID PITCH//ELEVATOR/Sum Fdbk/Disabled'
- * '<S169>' : 'pid_control_V1/PID PITCH//ELEVATOR/Tracking Mode/Disabled'
- * '<S170>' : 'pid_control_V1/PID PITCH//ELEVATOR/Tracking Mode Sum/Passthrough'
- * '<S171>' : 'pid_control_V1/PID PITCH//ELEVATOR/Tsamp - Integral/TsSignalSpecification'
- * '<S172>' : 'pid_control_V1/PID PITCH//ELEVATOR/Tsamp - Ngain/Passthrough'
- * '<S173>' : 'pid_control_V1/PID PITCH//ELEVATOR/postSat Signal/Forward_Path'
- * '<S174>' : 'pid_control_V1/PID PITCH//ELEVATOR/preInt Signal/Internal PreInt'
- * '<S175>' : 'pid_control_V1/PID PITCH//ELEVATOR/preSat Signal/Forward_Path'
+ * '<S124>' : 'pid_control_V1/PID ELEVATOR/Anti-windup'
+ * '<S125>' : 'pid_control_V1/PID ELEVATOR/D Gain'
+ * '<S126>' : 'pid_control_V1/PID ELEVATOR/External Derivative'
+ * '<S127>' : 'pid_control_V1/PID ELEVATOR/Filter'
+ * '<S128>' : 'pid_control_V1/PID ELEVATOR/Filter ICs'
+ * '<S129>' : 'pid_control_V1/PID ELEVATOR/I Gain'
+ * '<S130>' : 'pid_control_V1/PID ELEVATOR/Ideal P Gain'
+ * '<S131>' : 'pid_control_V1/PID ELEVATOR/Ideal P Gain Fdbk'
+ * '<S132>' : 'pid_control_V1/PID ELEVATOR/Integrator'
+ * '<S133>' : 'pid_control_V1/PID ELEVATOR/Integrator ICs'
+ * '<S134>' : 'pid_control_V1/PID ELEVATOR/N Copy'
+ * '<S135>' : 'pid_control_V1/PID ELEVATOR/N Gain'
+ * '<S136>' : 'pid_control_V1/PID ELEVATOR/P Copy'
+ * '<S137>' : 'pid_control_V1/PID ELEVATOR/Parallel P Gain'
+ * '<S138>' : 'pid_control_V1/PID ELEVATOR/Reset Signal'
+ * '<S139>' : 'pid_control_V1/PID ELEVATOR/Saturation'
+ * '<S140>' : 'pid_control_V1/PID ELEVATOR/Saturation Fdbk'
+ * '<S141>' : 'pid_control_V1/PID ELEVATOR/Sum'
+ * '<S142>' : 'pid_control_V1/PID ELEVATOR/Sum Fdbk'
+ * '<S143>' : 'pid_control_V1/PID ELEVATOR/Tracking Mode'
+ * '<S144>' : 'pid_control_V1/PID ELEVATOR/Tracking Mode Sum'
+ * '<S145>' : 'pid_control_V1/PID ELEVATOR/Tsamp - Integral'
+ * '<S146>' : 'pid_control_V1/PID ELEVATOR/Tsamp - Ngain'
+ * '<S147>' : 'pid_control_V1/PID ELEVATOR/postSat Signal'
+ * '<S148>' : 'pid_control_V1/PID ELEVATOR/preInt Signal'
+ * '<S149>' : 'pid_control_V1/PID ELEVATOR/preSat Signal'
+ * '<S150>' : 'pid_control_V1/PID ELEVATOR/Anti-windup/Back Calculation'
+ * '<S151>' : 'pid_control_V1/PID ELEVATOR/D Gain/Internal Parameters'
+ * '<S152>' : 'pid_control_V1/PID ELEVATOR/External Derivative/Error'
+ * '<S153>' : 'pid_control_V1/PID ELEVATOR/Filter/Cont. Filter'
+ * '<S154>' : 'pid_control_V1/PID ELEVATOR/Filter ICs/Internal IC - Filter'
+ * '<S155>' : 'pid_control_V1/PID ELEVATOR/I Gain/Internal Parameters'
+ * '<S156>' : 'pid_control_V1/PID ELEVATOR/Ideal P Gain/Passthrough'
+ * '<S157>' : 'pid_control_V1/PID ELEVATOR/Ideal P Gain Fdbk/Disabled'
+ * '<S158>' : 'pid_control_V1/PID ELEVATOR/Integrator/Continuous'
+ * '<S159>' : 'pid_control_V1/PID ELEVATOR/Integrator ICs/Internal IC'
+ * '<S160>' : 'pid_control_V1/PID ELEVATOR/N Copy/Disabled'
+ * '<S161>' : 'pid_control_V1/PID ELEVATOR/N Gain/Internal Parameters'
+ * '<S162>' : 'pid_control_V1/PID ELEVATOR/P Copy/Disabled'
+ * '<S163>' : 'pid_control_V1/PID ELEVATOR/Parallel P Gain/Internal Parameters'
+ * '<S164>' : 'pid_control_V1/PID ELEVATOR/Reset Signal/Disabled'
+ * '<S165>' : 'pid_control_V1/PID ELEVATOR/Saturation/Enabled'
+ * '<S166>' : 'pid_control_V1/PID ELEVATOR/Saturation Fdbk/Disabled'
+ * '<S167>' : 'pid_control_V1/PID ELEVATOR/Sum/Sum_PID'
+ * '<S168>' : 'pid_control_V1/PID ELEVATOR/Sum Fdbk/Disabled'
+ * '<S169>' : 'pid_control_V1/PID ELEVATOR/Tracking Mode/Disabled'
+ * '<S170>' : 'pid_control_V1/PID ELEVATOR/Tracking Mode Sum/Passthrough'
+ * '<S171>' : 'pid_control_V1/PID ELEVATOR/Tsamp - Integral/TsSignalSpecification'
+ * '<S172>' : 'pid_control_V1/PID ELEVATOR/Tsamp - Ngain/Passthrough'
+ * '<S173>' : 'pid_control_V1/PID ELEVATOR/postSat Signal/Forward_Path'
+ * '<S174>' : 'pid_control_V1/PID ELEVATOR/preInt Signal/Internal PreInt'
+ * '<S175>' : 'pid_control_V1/PID ELEVATOR/preSat Signal/Forward_Path'
  * '<S176>' : 'pid_control_V1/PID TIIMON/Anti-windup'
  * '<S177>' : 'pid_control_V1/PID TIIMON/D Gain'
  * '<S178>' : 'pid_control_V1/PID TIIMON/External Derivative'
