@@ -1,9 +1,7 @@
 // Copyright 2022-2024 The MathWorks, Inc.
-// Generated 08-Apr-2026 10:36:04
+// Generated 14-Apr-2026 23:25:58
 #include "slros2_initialize.h"
 const std::string SLROSNodeName("pid_control_V1");
-// pid_control_V1/Publish
-SimulinkPublisher<std_msgs::msg::Float64,SL_Bus_std_msgs_Float64> Pub_pid_control_V1_588;
 // pid_control_V1/SUBSYSTEM_MODEL/Subscribe1_TURBULENCIA1
 SimulinkSubscriber<std_msgs::msg::Bool,SL_Bus_std_msgs_Bool> Sub_pid_control_V1_423;
 // pid_control_V1/SUBSYSTEM_MODEL/Subscribe_HEAVE

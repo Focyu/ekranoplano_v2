@@ -6,9 +6,9 @@
  *
  * Code generation for model "pid_control_V1".
  *
- * Model version              : 12.145
+ * Model version              : 12.131
  * Simulink Coder version : 25.2 (R2025b) 28-Jul-2025
- * C++ source code generated on : Wed Apr  8 10:35:43 2026
+ * C++ source code generated on : Tue Apr 14 23:25:41 2026
  *
  * Target selection: ert.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -48,7 +48,6 @@
 
 extern real_T rt_urand_Upu32_Yd_f_pw_snf(uint32_T *u);
 extern real_T rt_nrand_Upu32_Yd_f_pw_snf(uint32_T *u);
-extern real_T rt_roundd_snf(real_T u);
 extern real_T rt_atan2d_snf(real_T u0, real_T u1);
 extern real_T rt_powd_snf(real_T u0, real_T u1);
 extern uint32_T plook_bincpa(real_T u, const real_T bp[], uint32_T maxIndex,
