@@ -7,18 +7,6 @@ import math
 import time
 import random
 
-# --- Configuración ---
-RAMP_DURATION = 3.0
-INTERVAL      = 15.0
-#!/usr/bin/env python3
-import rclpy
-from rclpy.node import Node
-from std_msgs.msg import Float64, Bool
-import curses
-import math
-import time
-import random
-
 # --- Parámetros de Configuración ---
 RAMP_DURATION = 3.0
 INTERVAL      = 15.0
@@ -27,7 +15,7 @@ ROLL_MAX_ABS  = 15.0
 KFF_ALTURA    = 0.10
 ALT_MIN       = 0.10
 YAW_STEP      = 1.5
-YAW_MAX       = 10.0
+YAW_MAX       = 45.0
 YAW_HOLD_TIME = 0.50
 K_PITCH_FF    = 0.8  
 
@@ -211,149 +199,6 @@ def main(stdscr):
         node.shutdown_limpio()
         node.destroy_node()
         rclpy.shutdown()
-
-if __name__ == '__main__':
-    curses.wrapper(main)
-# --- Parámetros de giro coordinado ---
-# Invertimos BANK_POR_YAW si el desplazamiento lateral sigue siendo opuesto al morro
-BANK_POR_YAW = 6.0 / 15.0 
-ROLL_MAX_ABS = 15.0
-KFF_ALTURA   = 0.10
-ALT_MIN      = 0.10
-
-# --- Parámetros del resorte de yaw ---
-YAW_STEP      = 1.5
-YAW_MAX       = 10.0
-YAW_HOLD_TIME = 0.50
-
-# --- Compensación de Pitch ---
-# Si al girar el morro hace lo contrario a lo deseado, cambiaremos el signo aquí
-K_PITCH_FF = 0.8  
-
-class VirtualRudder(Node):
-    def __init__(self):
-        super().__init__('virtual_rudder')
-
-        self.pub_alt   = self.create_publisher(Float64, '/setpoint/altura',     1)
-        self.pub_pitch = self.create_publisher(Float64, '/setpoint/pitch',      1)
-        self.pub_yaw   = self.create_publisher(Float64, '/setpoint/yaw',        1)
-        self.pub_roll  = self.create_publisher(Float64, '/setpoint/roll',       1)
-        self.pub_turb  = self.create_publisher(Bool,    '/setpoint/turbulencia', 1)
-        self.pub_heave      = self.create_publisher(Float64, '/olas/heave',      10)
-        self.pub_pitch_rate = self.create_publisher(Float64, '/olas/pitch_rate', 10)
-
-        self.h_actual = 1.0
-        self.psi_actual = 0.0
-        self.create_subscription(Float64, '/estado/altura', self._cb_altura, 10)
-        self.create_subscription(Float64, '/estado/yaw',    self._cb_yaw,    10)
-
-        self.alt_m         = 1.0
-        self.pitch_deg     = 0.0
-        self.turb_enabled  = False
-        self.ocean_enabled = False
-        self.step_alt      = 0.10
-        self.step_deg      = 0.20 # Un poco más sensible
-
-        self.yaw_acum      = 0.0
-        self.yaw_active    = 0.0
-        self.roll_active   = 0.0
-        self.yaw_hold_until = 0.0
-
-        self.t0 = time.time()
-        self.create_timer(0.05, self.publish_olas)
-
-    def _cb_altura(self, msg): self.h_actual = msg.data
-    def _cb_yaw(self, msg): self.psi_actual = math.degrees(msg.data)
-
-    def _roll_max(self):
-        return min(8.0 + self.h_actual * 2.5, ROLL_MAX_ABS)
-
-    def _altura_corregida(self):
-        phi_rad = math.radians(self.roll_active)
-        return self.alt_m + (self.alt_m * KFF_ALTURA * (1.0 - math.cos(phi_rad)))
-
-    def _pitch_corregido(self):
-        # Si el morro sube solo al girar, esta compensación debe ser NEGATIVA
-        pitch_ff = -K_PITCH_FF * (abs(self.roll_active) / 10.0)
-        return self.pitch_deg + pitch_ff
-
-    def _pulsar_yaw(self, direccion):
-        # Direccion viene invertida desde el main para compensar tu observación
-        self.yaw_acum = max(-YAW_MAX, min(YAW_MAX, self.yaw_acum + direccion * YAW_STEP))
-        self.yaw_active = self.psi_actual + self.yaw_acum
-        self.roll_active = (self.yaw_acum * BANK_POR_YAW)
-        # Limitar Roll
-        limit = self._roll_max()
-        self.roll_active = max(-limit, min(limit, self.roll_active))
-        self.yaw_hold_until = time.time() + YAW_HOLD_TIME
-
-    def _actualizar_resorte(self, now):
-        if now >= self.yaw_hold_until:
-            self.yaw_acum = 0.0
-            self.roll_active = 0.0
-
-    def publish_olas(self):
-        if not self.ocean_enabled: return
-        t = time.time() - self.t0
-        self.pub_heave.publish(Float64(data=0.15 * math.cos(1.2 * t)))
-
-    def publish_all(self):
-        self.pub_alt.publish(Float64(data=float(self._altura_corregida())))
-        self.pub_pitch.publish(Float64(data=math.radians(self._pitch_corregido())))
-        self.pub_yaw.publish(Float64(data=math.radians(self.yaw_active)))
-        self.pub_roll.publish(Float64(data=math.radians(self.roll_active)))
-        self.pub_turb.publish(Bool(data=self.turb_enabled))
-
-    def shutdown_limpio(self):
-        for pub in [self.pub_roll, self.pub_pitch, self.pub_yaw]:
-            pub.publish(Float64(data=0.0))
-        rclpy.shutdown()
-
-def main(stdscr):
-    rclpy.init()
-    node = VirtualRudder()
-    stdscr.nodelay(True)
-    stdscr.keypad(True)
-
-    try:
-        while rclpy.ok():
-            now = time.time()
-            c = stdscr.getch()
-
-            if c != -1:
-                # --- CAMBIO CRÍTICO DE SIGNOS AQUÍ ---
-                if c == curses.KEY_RIGHT: 
-                    node._pulsar_yaw(-1) # Antes era +1, ahora invertimos para que apunte a la derecha
-                elif c == curses.KEY_LEFT: 
-                    node._pulsar_yaw(1)
-                
-                elif c == curses.KEY_UP:    
-                    node.pitch_deg -= node.step_deg # Invertimos: Flecha arriba ahora baja el morro (o viceversa)
-                elif c == curses.KEY_DOWN:  
-                    node.pitch_deg += node.step_deg 
-                
-                elif c in (ord('w'), ord('W')): node.alt_m += node.step_alt
-                elif c in (ord('s'), ord('S')): node.alt_m -= node.step_alt
-                elif c == ord(' '):
-                    node.pitch_deg = 0.0
-                    node.yaw_acum = 0.0
-                    node.yaw_active = node.psi_actual
-                elif c in (ord('q'), ord('Q')): break
-
-            node._actualizar_resorte(now)
-            node.publish_all()
-            rclpy.spin_once(node, timeout_sec=0.05)
-
-            # Feedback visual
-            stdscr.erase()
-            stdscr.addstr(0, 0, "CONTROL EKRANOPLANO - SIGNOS REVISADOS")
-            stdscr.addstr(2, 0, f"Pitch Setpoint: {node.pitch_deg:+.2f}")
-            stdscr.addstr(3, 0, f"Yaw Active:    {node.yaw_active:+.2f}")
-            stdscr.addstr(4, 0, f"Roll Active:   {node.roll_active:+.2f}")
-            stdscr.refresh()
-
-    finally:
-        node.shutdown_limpio()
 
 if __name__ == '__main__':
     curses.wrapper(main)
