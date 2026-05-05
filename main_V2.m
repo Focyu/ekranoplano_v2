@@ -8,7 +8,7 @@ rho      = 1.225;
 Sp_prop  = pi*(D_prop^2/4);
 km_motor = 25.0;
 Cp = Cp_motor;   % alias para el bloque Simulink
-D  = D_prop;     % alias para el bloque Simulink (si lo usa)
+D  = D_prop;     % alias para el bloque Simulink 
 Sp = pi*(D^2/4);
 km = km_motor;  
 max_thrust_force_per_motor = 0.5*rho*Sp_prop*Cp_motor*km_motor^2;
@@ -16,7 +16,7 @@ fprintf('Thrust max por motor: %.3f N\n', max_thrust_force_per_motor);
 fprintf('Thrust max total:     %.3f N\n', 2*max_thrust_force_per_motor);
 
 %% CONDICIONES INICIALES
-tsim = 5;
+tsim = 10;
 step = 0.01;
 x_nom = zeros(12,1);
 
@@ -27,15 +27,15 @@ x_nom(8)  = 1.5*(pi/180);   % theta trimado (~1.5° con iw=1.5°)
 x_nom(10) = 0;              % x_NED
 x_nom(11) = 0;              % y_NED
 x_nom(12) = -0.550;         % z_NED (altura = 0.55 m)
-x_nom(7) = 0.0 * (pi/180);  % phi inicial = 0 explícito
+
 % Throttle inicial: calculado para equilibrar drag
 % D_cruise ≈ 0.93 N (con CD_0=0.042), Tp_each ≈ 0.465 N
 % Con D_prop=5": throttle necesario ≈ 0.52
 u_nom = zeros(5,1);
 u_nom(2)   = 0.0;   % Elevador neutro
 u_nom(4:5) = 0.52;  % CORREGIDO: era 0.80 (sobreempujaba), ahora equilibrado
-x0 = x_nom;
-
+% x0 = x_nom;
+x0 = zeros(12,1);   % todos los estados en cero al inicio
 %% PARAMETROS DE CONTROL PID (Para modelo de 1.2 kg)
 
 % 1. Lazo de Velocidad
@@ -45,36 +45,37 @@ Ki_u = 0.015;
 Kd_u = 0.005;   
 
 % 2. Lazo de Altura
-h_sp = 0.550;    % Setpoint de altura (5 cm)
-Kp_h = 2.0;
-Ki_h = 0.25;
-Kd_h = 4.5;
+h_sp = 1.550;    % Setpoint de altura (5 cm)
+Kp_h = 1.2;
+Ki_h = 0.06;
+Kd_h = 3.5;
 
 % Límite de seguridad
-theta_max =  5.0 * (pi/180); 
-theta_min = -3.0 * (pi/180); 
+theta_max =  6.0 * (pi/180); 
+theta_min = -4.0 * (pi/180); 
 
 % 3. Lazo Interno de Elevador (Pitch)
 Kp_pitch = -0.50;   
-Ki_pitch = -0.03;  
-Kd_pitch = -0.3;   
+Ki_pitch = -0.015;  
+Kd_pitch = -0.30;   
 
 % 4. Lazo de Timón (Yaw)
 psi_sp = 0 * (pi/180); 
-Kp_yaw = -0.40;   
-Ki_yaw = -0.005;  
-Kd_yaw = -0.4;   
+Kp_yaw = 0.8;   
+Ki_yaw = 0.02;  
+Kd_yaw = 0.85;   
 
 % 5. Lazo de Alerones (Roll)
-phi_sp = 0.0; 
-Kp_roll = -3.5;   
-Ki_roll = -0.08;  
-Kd_roll = -1.2;   
+phi_sp = 0.0;
+Kp_roll = 0.05;   
+Ki_roll = 0.0;  
+Kd_roll = 0.05;   
+
 
 
 
 %% Simulation
-sim = sim('pid_control_V1.slx');
+sim = sim('pid_control_V3.slx');
 
 S = sim.states;
 t = sim.tout;
