@@ -2,10 +2,7 @@
 <sdf version="1.6">
   <model name="xy_reference_wheel">
     <static>true</static>
-
-    <!-- Pega aquí todos los <link> de la respuesta anterior (desde 0deg hasta 350deg) -->
-    <!-- ... -->
-        <!-- Rosa de referencia XY: 36 líneas radiales cada 10° como rayos de rueda -->
+    <!-- Rosa de referencia XY: 36 líneas radiales cada 10° como rayos de rueda -->
     <!-- X+ = rojo brillante | Y+ = verde brillante | opuestos = oscuros | resto = gris -->
     <model name="xy_reference_wheel">
       <static>true</static>

@@ -4,11 +4,8 @@
     <static>true</static>
     <link name="base_link">
       <visual name="visual">
-        <!-- Rotación aplicada: 
-             Roll: 1.5708 (para que no esté acostado)
-             Pitch: 0
-             Yaw: -1.5708 (para que la nariz mire al eje X) -->
-        <pose>0 0 0 1.5708 0 -1.5708</pose>
+
+        <pose>0 0 0 0 0 0</pose> 
         <geometry>
           <mesh>
             <uri>model://mi_ekranoplano/meshes/AIRFISH-8_EKRANOPLANO.dae</uri>
@@ -17,9 +14,8 @@
         </geometry>
       </visual>
       
-      <!-- Es buena práctica añadir el collision box con la misma pose -->
       <collision name="collision">
-        <pose>0 0 0 1.5708 0 -1.5708</pose>
+        <pose>0 0 0 0 0 0</pose>
         <geometry>
           <mesh>
             <uri>model://mi_ekranoplano/meshes/AIRFISH-8_EKRANOPLANO.dae</uri>

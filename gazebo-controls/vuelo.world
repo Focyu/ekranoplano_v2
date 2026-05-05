@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <sdf version="1.6">
   <world name="default">
-    <gravity>0 0 0</gravity> <!-- Veo que anulaste la gravedad en Gazebo porque Simulink ya la calcula, ¡bien hecho! -->
+    <gravity>0 0 0</gravity> 
 
     <plugin name="gazebo_ros_state" filename="libgazebo_ros_state.so">
       <ros>
@@ -16,7 +16,6 @@
       <uri>model://sun</uri>
     </include>
 
-    <!-- Océano con material mejorado y plano móvil -->
     <model name="ocean">
       <static>true</static>
       <pose>0 0 0 0 0 0</pose>
@@ -48,20 +47,20 @@
       </link>
     </model>
 
-
-    <!-- Tu modelo cargado desde la carpeta local -->
+    <!-- Modelo cargado desde la carpeta local -->
     <include>
       <name>ekranoplano</name>
       <uri>model://mi_ekranoplano</uri>
-      <!-- IMPORTANTE: Hacemos match con el z_NED inicial de Simulink -->
       <pose>0 0 1 0 0 0</pose> 
     </include>
-   <gui fullscreen='0'>
+
+    <gui fullscreen='0'>
+
       <camera name='user_camera'>
-        <pose>5 -5 2 0 0.2 2.3</pose>
+        <pose>0 0 1 0 0 1.5708</pose>
         <view_controller>orbit</view_controller>
       </camera>
-      
+      <!-- Se ha eliminado user_camera de aquí -->
       <plugin name='keyboard' filename='libKeyboardGUIPlugin.so'/>
 
       <grid>
@@ -79,8 +78,5 @@
       <pose>0 0 0 0 0 0</pose>
     </include>
 
-
   </world>
-  
 </sdf>
-
