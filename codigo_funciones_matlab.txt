@@ -1,7 +1,7 @@
 ==========================================================
 REPORTE DE CÓDIGO INTERNO - MATLAB FUNCTIONS
 Modelo: pid_control_V3
-Fecha: 05-May-2026 19:23:05
+Fecha: 06-May-2026 00:19:58
 ==========================================================
 
 ----------------------------------------------------------
@@ -61,13 +61,24 @@ end
 
 
 ----------------------------------------------------------
-BLOQUE [4]: pid_control_V3/SUBSYSTEM_MODEL/MATLAB Function - MODEL
+BLOQUE [4]: pid_control_V3/SUBSYSTEM_MODEL/MATLAB Function-reset
+----------------------------------------------------------
+function x_reset = fcn(x)
+    x_reset = x;
+    x_reset(3) = 0.0;   % congela w (velocidad vertical)
+    x_reset(12) = 0.0;   % fija z_NED = 0 (superficie del agua)
+end
+
+
+----------------------------------------------------------
+BLOQUE [5]: pid_control_V3/SUBSYSTEM_MODEL/MATLAB Function - MODEL
 ----------------------------------------------------------
 function [XDOT, Va_out, CL_total, h_out, mu_Lw_out, mu_Dw_out] = Model(X, U, U_wind, W_wind)
 % Modelo Dinámico del Ekranoplano AirFish 8 (Sincronizado)
 % ESCALA: 1:21.5 | Soporte Coder y Viento
 % CORRECCIONES v2: D_prop 3.5"→5", alpha_0h, iw, CD_0
 % CORRECCIONES v3: Desacoplamiento Ixz (feedforward interno roll-yaw)
+% CORRECCIONES v4: N_dec simétrico, C_D_e unidades, signo motor Fz
 %#codegen
 coder.varsize('XDOT',      [40, 1], [0, 0]);
 coder.varsize('Va_out',    [1,  1], [0, 0]);
@@ -111,8 +122,8 @@ v_r = x2 + v_wg;
 w_r = x3 + w_wg;
 
 Va = sqrt(u_r^2 + v_r^2 + w_r^2);
-if Va < 0.5
-    Va    = 0.5;
+if Va < 01.5
+    Va    = 1.5;
     alpha = 0.0;
     beta  = 0.0;
 else
@@ -154,7 +165,8 @@ CL_h_IGE  = CL_h_OGE * mu_Lh;
 
 CD_iw_IGE = (CL_w_IGE^2)/(pi*ARw*e0w) * mu_Dw;
 CD_ih_IGE = (CL_h_IGE^2)/(pi*ARh*e0h) * mu_Dh;
-C_D_e     = -0.0000108*u2^2 + 0.000715*u2;
+u2_deg    = u2 * 180/pi;
+C_D_e     = -0.0000108*u2_deg^2 + 0.000715*u2_deg;
 
 Dtot = Q*(CD_0*Sw + CD_iw_IGE*Sw + CD_ih_IGE*Sh + C_D_e*Sh);
 Ltot = Q*(CL_w_IGE*Sw + CL_h_IGE*Sh);
@@ -168,17 +180,19 @@ FA_b = C_bs * FA_s;
 Cm_alpha = -1.14; Cm_q = -5.0; Cm_de = -3.0; Cm_h = 0.05;
 Delta_Cm_IGE = -Cm_h * exp(-4.0*abs(hw/bw));
 Cl_da = -0.5; Cn_dr = -0.3; Cl_p = -2.0; Cn_r = -1.5;
-Cn_da = -0.05;
+Cn_da = -0.05; Cl_beta = -0.12;
 
-Cl_beta = -0.12;
-Cl = Cl_beta*beta + Cl_p*(p_aero*bw/(2*Va)) + Cl_da*u1;
+% v4b: diedro reducido en efecto suelo (WIG vuela más estable lateralmente IGE)
+Cl_beta_IGE = Cl_beta * (1.0 - 0.4*exp(-3.0*abs(hw/bw)));  % <<< NUEVO v4b
+
+Cl = Cl_beta_IGE*beta + Cl_p*(p_aero*bw/(2*Va)) + Cl_da*u1;
 Cm = Cm_alpha*alpha + Delta_Cm_IGE + Cm_q*(q_aero*cbar/(2*Va)) + Cm_de*u2;
-Cn = -0.1146*beta   + Cn_r*(r_aero*bw/(2*Va))   + Cn_dr*u3  + Cn_da*u1;
+Cn = -0.1146*beta + Cn_r*(r_aero*bw/(2*Va)) + Cn_dr*u3 + Cn_da*u1;
 MAcg_b = [Cl; Cm; Cn] .* [bw*Q*Sw; cbar*Q*Sw; bw*Q*Sw];
 
-%-----------MOTOR BRUSHLESS (CORREGIDO)---------------------------
+%-----------MOTOR BRUSHLESS--------------------------------------
 km_motor = 25.0;
-Cp_motor = 0.57;
+Cp_motor = 0.30;           % <<< CORREGIDO v4b: 0.57→0.30 para Re bajo
 D_prop   = 0.1270;
 Sp_prop  = pi*(D_prop^2/4);
 
@@ -187,14 +201,13 @@ Vd2 = Va + u5*(km_motor - Va);
 Tp1 = 0.5*rho*Sp_prop*Cp_motor*Vd1*(Vd1 - Va);
 Tp2 = 0.5*rho*Sp_prop*Cp_motor*Vd2*(Vd2 - Va);
 
-FE1_b = [Tp1*cos(-5*pi/180); 0; Tp1*sin(5*pi/180)];
-FE2_b = [Tp2*cos(-5*pi/180); 0; Tp2*sin(5*pi/180)];
+FE1_b = [Tp1*cos(5*pi/180); 0; -Tp1*sin(5*pi/180)];       % <<< CORREGIDO v4
+FE2_b = [Tp2*cos(5*pi/180); 0; -Tp2*sin(5*pi/180)];       % <<< CORREGIDO v4
 FE_b  = FE1_b + FE2_b;
 
 MEcg1_b = cross([Xcg-Xapt1; Yapt1-Ycg; Zcg-Zapt1], FE1_b);
 MEcg2_b = cross([Xcg-Xapt2; Yapt2-Ycg; Zcg-Zapt2], FE2_b);
 MEcg_b  = MEcg1_b + MEcg2_b;
-
 %-----------DINÁMICA---------------------------------------------
 g_b  = [-g*sin(x8); g*cos(x8)*sin(x7); g*cos(x8)*cos(x7)];
 Fg_b = m*g_b;
@@ -207,14 +220,14 @@ Gamma = Ixx*Izz - Ixz^2;
 p = wbe_b(1); q = wbe_b(2); r = wbe_b(3);
 L = Mcg_b(1); M = Mcg_b(2); N = Mcg_b(3);
 
-% --- DESACOPLAMIENTO Ixz (feedforward interno roll-yaw) ----------
-L_ff  = -(Ixz / Izz) * N;                                  % <<< NUEVO
-L_dec = L + L_ff;                                           % <<< NUEVO
-% ----------------------------------------------------------------
+% --- DESACOPLAMIENTO Ixz SIMÉTRICO (v4) --------------------------
+L_dec = L - (Ixz / Izz) * N;                               % <<< CORREGIDO v4
+N_dec = N - (Ixz / Ixx) * L;                               % <<< NUEVO v4
+% -----------------------------------------------------------------
 
-p_dot = (Izz*L_dec + Ixz*N - (Ixz*(Iyy-Ixx-Izz)*p + (Ixz^2+Izz*(Izz-Iyy))*r)*q) / Gamma;  % <<< MODIFICADO
+p_dot = (Izz*L_dec + Ixz*N_dec - (Ixz*(Iyy-Ixx-Izz)*p + (Ixz^2+Izz*(Izz-Iyy))*r)*q) / Gamma;
 q_dot = (M - (Ixx-Izz)*p*r - Ixz*(p^2-r^2)) / Iyy;
-r_dot = (Ixz*L_dec + Ixx*N + (Ixz*(Iyy-Ixx-Izz)*r + (Ixz^2+Ixx*(Ixx-Iyy))*p)*q) / Gamma;  % <<< MODIFICADO
+r_dot = (Ixz*L_dec + Ixx*N_dec + (Ixz*(Iyy-Ixx-Izz)*r + (Ixz^2+Ixx*(Ixx-Iyy))*p)*q) / Gamma;
 
 x4to6dot = [p_dot; q_dot; r_dot];
 
@@ -250,14 +263,4 @@ R = [c_the*c_psi,  s_phi*s_the*c_psi - c_phi*s_psi,  c_phi*s_the*c_psi + s_phi*s
      -s_the,       s_phi*c_the,                       c_phi*c_the];
 V_NED = [R(1,:)*V_body; R(2,:)*V_body; R(3,:)*V_body];
 end
-
-----------------------------------------------------------
-BLOQUE [5]: pid_control_V3/SUBSYSTEM_MODEL/MATLAB Function-reset
-----------------------------------------------------------
-function x_reset = fcn(x)
-    x_reset = x;
-    x_reset(3) = 0.0;   % congela w (velocidad vertical)
-    x_reset(12) = 0.0;   % fija z_NED = 0 (superficie del agua)
-end
-
 
