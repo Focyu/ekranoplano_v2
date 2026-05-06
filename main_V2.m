@@ -67,9 +67,9 @@ Kd_yaw = 0.85;
 
 % 5. Lazo de Alerones (Roll)
 phi_sp = 0.0;
-Kp_roll = 0.05;   
-Ki_roll = 0.0;  
-Kd_roll = 0.05;   
+Kp_roll = 1.0;   
+Ki_roll = 0.05;  
+Kd_roll = -0.4;   
 
 
 

@@ -42,7 +42,6 @@ pid_control_V3/PID TIIMON
 pid_control_V3/PID VELOCIDAD
 pid_control_V3/Publish
 pid_control_V3/Rate Limiter
-pid_control_V3/Rate Limiter1
 pid_control_V3/SUBSYSTEM_MODEL
 pid_control_V3/SUBSYSTEM_MODEL/In1
 pid_control_V3/SUBSYSTEM_MODEL/In2

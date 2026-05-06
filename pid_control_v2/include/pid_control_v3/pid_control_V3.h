@@ -8,7 +8,7 @@
  *
  * Model version              : 12.149
  * Simulink Coder version : 25.2 (R2025b) 28-Jul-2025
- * C++ source code generated on : Mon May  4 23:01:20 2026
+ * C++ source code generated on : Tue May  5 19:21:05 2026
  *
  * Target selection: ert.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -194,7 +194,6 @@ struct B_pid_control_V3_T {
   SL_Bus_gazebo_msgs_SetEntityStateRequest BusAssignment;/* '<Root>/Bus Assignment' */
   real_T IC[12];                       /* '<S13>/IC' */
   real_T x[12];                        /* '<S13>/Integrator' */
-  uint8_T stringOut[128];              /* '<Root>/MATLAB Function1' */
   real_T R[9];
   real_T RotationAnglestoDirectionCo[9];
                         /* '<S13>/Rotation Angles to Direction Cosine Matrix' */
@@ -223,7 +222,7 @@ struct B_pid_control_V3_T {
   real_T Gain;                         /* '<Root>/Gain' */
   real_T FilterCoefficient;            /* '<S108>/Filter Coefficient' */
   real_T Saturation;                   /* '<S112>/Saturation' */
-  real_T RateLimiter1;                 /* '<Root>/Rate Limiter1' */
+  real_T Switch1;                      /* '<Root>/Switch1' */
   real_T FilterCoefficient_c;          /* '<S56>/Filter Coefficient' */
   real_T Saturation_k;                 /* '<S60>/Saturation' */
   real_T Saturation_i;                 /* '<Root>/Saturation' */
@@ -244,7 +243,7 @@ struct B_pid_control_V3_T {
   real_T Switch_j;                     /* '<S253>/Switch' */
   real_T Product[4];                   /* '<S301>/Product' */
   real_T Switch_p[3];                  /* '<S13>/Switch' */
-  real_T Switch1[3];                   /* '<S13>/Switch1' */
+  real_T Switch1_p[3];                 /* '<S13>/Switch1' */
   real_T data;
   real_T data_n;
   real_T Power;                        /* '<S13>/Product2' */
@@ -318,13 +317,13 @@ struct B_pid_control_V3_T {
   real_T R_tmp;
   real_T R_tmp_g;
   real_T Ltot_tmp;
-  real_T Switch1_m;                    /* '<Root>/Switch1' */
   SL_Bus_std_msgs_Float64 SourceBlock_o2_k;/* '<S288>/SourceBlock' */
   SL_Bus_std_msgs_Float64 SourceBlock_o2_p;/* '<S287>/SourceBlock' */
   SL_Bus_std_msgs_Float64 SourceBlock_o2;/* '<S16>/SourceBlock' */
   SL_Bus_std_msgs_Float64 SourceBlock_o2_o;/* '<S15>/SourceBlock' */
   uint32_T bpIndex[2];
   uint32_T lengthOut;                  /* '<Root>/MATLAB Function1' */
+  uint8_T stringOut[128];              /* '<Root>/MATLAB Function1' */
   boolean_T Compare;                   /* '<S282>/Compare' */
   boolean_T AND3;                      /* '<S43>/AND3' */
   boolean_T Memory_a;                  /* '<S43>/Memory' */
@@ -363,8 +362,7 @@ struct DW_pid_control_V3_T {
   real_T UnitDelay1_DSTATE;            /* '<Root>/Unit Delay1' */
   real_T UnitDelay2_DSTATE;            /* '<Root>/Unit Delay2' */
   real_T Memory2_PreviousInput[12];    /* '<S13>/Memory2' */
-  real_T PrevY;                        /* '<Root>/Rate Limiter1' */
-  real_T PrevY_g;                      /* '<Root>/Rate Limiter' */
+  real_T PrevY;                        /* '<Root>/Rate Limiter' */
   real_T LastMajorTime;                /* '<Root>/Rate Limiter' */
   real_T Memory_PreviousInput[3];      /* '<S13>/Memory' */
   real_T Memory1_PreviousInput[3];     /* '<S13>/Memory1' */
@@ -839,6 +837,7 @@ extern volatile boolean_T runModel;
  *
  * Block '<Root>/Display' : Unused code path elimination
  * Block '<Root>/Gain3' : Eliminated nontunable gain of 1
+ * Block '<S58>/Proportional Gain' : Eliminated nontunable gain of 1
  * Block '<S149>/Kb' : Eliminated nontunable gain of 1
  * Block '<S283>/Cast' : Eliminate redundant data type conversion
  * Block '<S283>/Cast To Double' : Eliminate redundant data type conversion
